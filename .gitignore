@@ -1,0 +1,7 @@
+node_modules/
+platforms/
+plugins/
+*.keystore
+*.jks
+.gradle/
+.DS_Store

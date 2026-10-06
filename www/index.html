@@ -4,17 +4,19 @@
   <meta charset="utf-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: content:;">
   <meta name="viewport" content="initial-scale=1,width=device-width,viewport-fit=cover">
-  <title>Easy English · Questions</title>
+  <title>Easy English · 100 Question Exam</title>
   <style>
     :root{--bg:#f7f5ef;--card:#fff;--ink:#1f2933;--muted:#667085;--green:#235347;--soft:#dbece6;--gold:#f4b860;--line:#e7e4dc;--red:#c86157}
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
     button{font:inherit;cursor:pointer}
-    .app{max-width:560px;margin:auto;padding:env(safe-area-inset-top) 16px calc(34px + env(safe-area-inset-bottom))}
-    .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 0 18px}
+    .app{max-width:620px;margin:auto;padding:env(safe-area-inset-top) 16px calc(34px + env(safe-area-inset-bottom))}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 0 18px;gap:12px}
     .brand{display:flex;align-items:center;gap:10px;font-weight:900}.mark{width:38px;height:38px;border-radius:12px;background:var(--green);color:#fff;display:grid;place-items:center;font-size:13px}
-    .score{padding:8px 11px;border-radius:999px;background:var(--soft);color:var(--green);font-size:12px;font-weight:900}
-    .progress{height:8px;background:#e7e4dc;border-radius:999px;overflow:hidden}.progress>span{display:block;height:100%;background:var(--green);width:0%;transition:.25s}
+    .score{padding:8px 11px;border-radius:999px;background:var(--soft);color:var(--green);font-size:12px;font-weight:900;white-space:nowrap}
+    .exam-head{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:10px}
+    .exam-head strong{font-size:14px}.exam-head span{font-size:12px;color:var(--muted)}
+    .progress{height:8px;background:#e7e4dc;border-radius:999px;overflow:hidden}.progress>span{display:block;height:100%;background:var(--green);width:1%;transition:.25s}
     .question-card{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:24px 20px;box-shadow:0 16px 42px rgba(31,41,51,.07)}
     .meta{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--green);font-weight:900}
     h1{font:700 30px/1.08 Georgia,"Times New Roman",serif;letter-spacing:-.035em;margin:14px 0 8px}
@@ -27,69 +29,140 @@
     .answer.wrong{background:#fde8e6;border-color:var(--red);color:#8c3f37}
     .answer:disabled{cursor:default}
     .feedback{min-height:26px;margin:16px 0 0;font-weight:850}
-    .next{width:100%;border:0;background:var(--green);color:#fff;border-radius:14px;padding:15px;margin-top:12px;font-weight:900;display:none}
-    .next.show{display:block}
+    .next,.restart{width:100%;border:0;background:var(--green);color:#fff;border-radius:14px;padding:15px;margin-top:12px;font-weight:900}
+    .next{display:none}.next.show{display:block}
     .footer{text-align:center;color:var(--muted);font-size:12px;margin-top:18px}
+    .result{display:none;text-align:center}.result.show{display:block}
+    .result .big{font:700 58px/1 Georgia,"Times New Roman",serif;color:var(--green);margin:14px 0 8px}
+    .result p{color:var(--muted);line-height:1.5}
   </style>
 </head>
 <body>
   <div class="app">
     <header class="topbar">
       <div class="brand"><span class="mark">EN</span><span>Easy English</span></div>
-      <span class="score" id="score">0 correct</span>
+      <span class="score" id="score">0 / 100</span>
     </header>
 
+    <div class="exam-head">
+      <strong id="questionNumber">Question 1 of 100</strong>
+      <span>Grammar exam</span>
+    </div>
     <div class="progress"><span id="progressBar"></span></div>
 
-    <main class="question-card">
+    <main class="question-card" id="questionCard">
       <div class="meta" id="meta">A1 · Present Simple</div>
-      <h1>Choose the correct answer</h1>
-      <p class="prompt">What is the Spanish translation?</p>
+      <h1 id="title">Choose the correct answer</h1>
+      <p class="prompt" id="prompt">What is the Spanish translation?</p>
       <div class="sentence" id="sentence"></div>
       <div class="answers" id="answers"></div>
       <div class="feedback" id="feedback"></div>
       <button class="next" id="nextBtn">Next question →</button>
     </main>
 
-    <div class="footer">10,000 questions · A1 to C1 · Offline</div>
+    <section class="question-card result" id="resultCard">
+      <div class="meta">Exam completed</div>
+      <div class="big" id="finalScore">0%</div>
+      <h1>Your result</h1>
+      <p id="resultText"></p>
+      <button class="restart" id="restartBtn">Start a new 100-question exam</button>
+    </section>
+
+    <div class="footer">10,000 grammar examples · 100 questions per exam · A1 to C1 · Offline</div>
   </div>
 
   <script src="cordova.js"></script>
   <script src="grammar-data.js"></script>
   <script>
     (() => {
-      const phrases = window.EASY_ENGLISH_PHRASES || [];
-      let index = 0, correct = 0, answered = false;
+      const bank = window.EASY_ENGLISH_PHRASES || [];
+      const EXAM_SIZE = 100;
+      let exam = [], index = 0, correct = 0, answered = false;
+
       const $ = id => document.getElementById(id);
 
       function shuffle(items){
         const a=[...items];
-        for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+        for(let i=a.length-1;i>0;i--){
+          const j=Math.floor(Math.random()*(i+1));
+          [a[i],a[j]]=[a[j],a[i]];
+        }
         return a;
       }
 
-      function makeOptions(item){
-        const sameLevel=phrases.filter(p=>p.level===item.level && p.id!==item.id);
-        const wrong=shuffle(sameLevel).slice(0,3).map(p=>p.spanish);
-        return shuffle([item.spanish,...wrong]);
+      function buildExam(){
+        const levels=['A1','A2','B1','B2','C1'];
+        const perLevel=EXAM_SIZE/levels.length;
+        let picked=[];
+        levels.forEach(level=>{
+          picked=picked.concat(shuffle(bank.filter(p=>p.level===level)).slice(0,perLevel));
+        });
+        exam=shuffle(picked).map((item,i)=>({...item,type:i%3}));
+        index=0;
+        correct=0;
+        $('score').textContent='0 / 100';
+      }
+
+      function uniqueWrong(pool, correctValue, getter){
+        const values=[];
+        for(const item of shuffle(pool)){
+          const value=getter(item);
+          if(value!==correctValue && !values.includes(value)) values.push(value);
+          if(values.length===3) break;
+        }
+        return values;
+      }
+
+      function makeQuestion(item){
+        const sameLevel=bank.filter(p=>p.level===item.level && p.id!==item.id);
+        if(item.type===0){
+          return {
+            prompt:'What is the Spanish translation?',
+            stem:item.english,
+            right:item.spanish,
+            options:shuffle([item.spanish,...uniqueWrong(sameLevel,item.spanish,p=>p.spanish)])
+          };
+        }
+        if(item.type===1){
+          return {
+            prompt:'Choose the correct English sentence.',
+            stem:item.spanish,
+            right:item.english,
+            options:shuffle([item.english,...uniqueWrong(sameLevel,item.english,p=>p.english)])
+          };
+        }
+        const candidates=bank.filter(p=>p.topic===item.topic && p.id!==item.id);
+        return {
+          prompt:'Which sentence matches this grammar example?',
+          stem:item.spanish,
+          right:item.english,
+          options:shuffle([item.english,...uniqueWrong(candidates.length?candidates:sameLevel,item.english,p=>p.english)])
+        };
       }
 
       function showQuestion(){
         answered=false;
-        const item=phrases[index%phrases.length];
+        const item=exam[index];
+        const q=makeQuestion(item);
+
+        $('questionCard').style.display='block';
+        $('resultCard').classList.remove('show');
         $('meta').textContent=item.level+' · '+item.topic;
-        $('sentence').textContent=item.english;
+        $('questionNumber').textContent='Question '+(index+1)+' of '+EXAM_SIZE;
+        $('prompt').textContent=q.prompt;
+        $('sentence').textContent=q.stem;
         $('feedback').textContent='';
         $('nextBtn').classList.remove('show');
         $('answers').innerHTML='';
-        makeOptions(item).forEach(option=>{
+        $('progressBar').style.width=((index+1)/EXAM_SIZE*100)+'%';
+
+        q.options.forEach(option=>{
           const b=document.createElement('button');
           b.className='answer';
           b.textContent=option;
-          b.onclick=()=>answer(b,option,item.spanish);
+          b.onclick=()=>answer(b,option,q.right);
           $('answers').appendChild(b);
         });
-        $('progressBar').style.width=((index%20)+1)*5+'%';
       }
 
       function answer(button,value,right){
@@ -104,13 +177,36 @@
           $('feedback').textContent='✓ Correct';
         }else{
           button.classList.add('wrong');
-          $('feedback').textContent='Not quite';
+          $('feedback').textContent='✗ Incorrect';
         }
-        $('score').textContent=correct+' correct';
+        $('score').textContent=correct+' / '+EXAM_SIZE;
+        $('nextBtn').textContent=index===EXAM_SIZE-1?'See results →':'Next question →';
         $('nextBtn').classList.add('show');
       }
 
-      $('nextBtn').onclick=()=>{index++;showQuestion();};
+      function showResults(){
+        $('questionCard').style.display='none';
+        $('resultCard').classList.add('show');
+        $('questionNumber').textContent='Exam completed';
+        $('progressBar').style.width='100%';
+        const pct=Math.round(correct/EXAM_SIZE*100);
+        $('finalScore').textContent=pct+'%';
+        let text='';
+        if(pct>=90) text='Excellent result. You answered '+correct+' of 100 questions correctly.';
+        else if(pct>=75) text='Very good result. You answered '+correct+' of 100 questions correctly.';
+        else if(pct>=60) text='Good progress. You answered '+correct+' of 100 questions correctly.';
+        else text='You answered '+correct+' of 100 questions correctly. Start another exam and keep practising.';
+        $('resultText').textContent=text;
+      }
+
+      $('nextBtn').onclick=()=>{
+        if(index===EXAM_SIZE-1) showResults();
+        else{index++;showQuestion();}
+      };
+
+      $('restartBtn').onclick=()=>{buildExam();showQuestion();window.scrollTo({top:0,behavior:'smooth'});};
+
+      buildExam();
       showQuestion();
     })();
   </script>

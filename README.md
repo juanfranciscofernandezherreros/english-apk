@@ -59,3 +59,20 @@ GitHub Actions also builds the debug APK automatically on pushes to `main`.
 - `.github/workflows/build-android.yml` — automatic APK build.
 
 Design inspired by: https://jnfz92.github.io/
+
+
+## One-click Windows build
+
+From File Explorer or CMD, run:
+
+```bat
+build-apk.bat
+```
+
+Or from PowerShell:
+
+```powershell
+./build-apk.ps1
+```
+
+The script installs dependencies, validates the 10,000-example corpus, adds Android if needed, checks requirements, builds the APK, and opens its location automatically.

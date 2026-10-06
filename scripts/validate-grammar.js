@@ -1,27 +1,27 @@
-const fs = require("fs");
-const vm = require("vm");
+const fs=require("fs");
+const path=require("path");
 
-const code = fs.readFileSync("www/grammar-data.js","utf8");
-const sandbox = { window: {} };
-vm.createContext(sandbox);
-vm.runInContext(code, sandbox);
+const levels=["a1","a2","b1","b2","c1"];
+let all=[];
 
-const phrases = sandbox.window.EASY_ENGLISH_PHRASES;
-const topics = sandbox.window.EASY_ENGLISH_TOPICS;
-
-if (!Array.isArray(phrases)) throw new Error("Phrase corpus was not created.");
-if (phrases.length !== 10000) throw new Error("Expected 10,000 phrases, got " + phrases.length);
-if (!Array.isArray(topics) || topics.length !== 25) throw new Error("Expected 25 grammar chapters.");
-for (const topic of topics) {
-  const count = phrases.filter(p => p.topic === topic.name).length;
-  if (count !== 400) throw new Error(topic.name + " should contain 400 phrases, got " + count);
+for(const level of levels){
+  const file=path.join(__dirname,"..","www","data",level+".json");
+  if(!fs.existsSync(file)) throw new Error("Missing "+file);
+  const rows=JSON.parse(fs.readFileSync(file,"utf8"));
+  if(!Array.isArray(rows)) throw new Error(level+".json must contain an array");
+  if(rows.length!==2000) throw new Error(level+".json must contain 2,000 questions, got "+rows.length);
+  for(const q of rows){
+    if(!q.id||!q.level||!q.topic||!q.english||!q.spanish){
+      throw new Error("Invalid question in "+level+".json: "+JSON.stringify(q));
+    }
+  }
+  all=all.concat(rows);
 }
-for (const p of phrases) {
-  if (!p.english || !p.spanish || !p.level || !p.topic) throw new Error("Incomplete phrase: " + JSON.stringify(p));
-}
-const levels = [...new Set(phrases.map(p=>p.level))].sort();
-if (levels.join(",") !== "A1,A2,B1,B2,C1") throw new Error("Unexpected levels: " + levels.join(","));
 
-console.log("✓ 10,000 bilingual grammar phrases");
-console.log("✓ 25 chapters × 400 phrases");
+if(all.length!==10000) throw new Error("Expected 10,000 questions, got "+all.length);
+const ids=new Set(all.map(q=>q.id));
+if(ids.size!==10000) throw new Error("Question IDs are not unique");
+
+console.log("✓ 10,000 JSON questions");
+console.log("✓ 2,000 questions per level");
 console.log("✓ Levels A1, A2, B1, B2 and C1");

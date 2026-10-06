@@ -3,7 +3,7 @@ Set-Location $PSScriptRoot
 
 Write-Host ""
 Write-Host "=========================================="
-Write-Host "  Easy English - Android APK Builder"
+Write-Host "  EnglishAPK - Android APK Builder"
 Write-Host "=========================================="
 Write-Host ""
 
@@ -35,16 +35,25 @@ if (-not (Test-Path "platforms/android")) {
 Run-Step "[4/6] Checking Android requirements..." { npx cordova@12.0.0 requirements android }
 Run-Step "[5/6] Building debug APK..." { npx cordova@12.0.0 build android }
 
-$apk = Join-Path $PSScriptRoot "platforms/android/app/build/outputs/apk/debug/app-debug.apk"
+$sourceApk = Join-Path $PSScriptRoot "platforms/android/app/build/outputs/apk/debug/app-debug.apk"
+$distDir = Join-Path $PSScriptRoot "dist"
+$finalApk = Join-Path $distDir "EnglishAPK-debug.apk"
 
 Write-Host ""
-Write-Host "[6/6] Locating APK..." -ForegroundColor Cyan
+Write-Host "[6/6] Renaming APK..." -ForegroundColor Cyan
 
-if (Test-Path $apk) {
-    Write-Host ""
-    Write-Host "BUILD SUCCESSFUL" -ForegroundColor Green
-    Write-Host $apk
-    Start-Process explorer.exe "/select,`"$apk`""
-} else {
-    throw "Build finished, but APK was not found at $apk"
+if (-not (Test-Path $sourceApk)) {
+    throw "Build finished, but APK was not found at $sourceApk"
 }
+
+New-Item -ItemType Directory -Force -Path $distDir | Out-Null
+Copy-Item -Force $sourceApk $finalApk
+
+Write-Host ""
+Write-Host "=========================================="
+Write-Host "  BUILD SUCCESSFUL"
+Write-Host "=========================================="
+Write-Host "APK:"
+Write-Host $finalApk
+Write-Host ""
+Start-Process explorer.exe "/select,`"$finalApk`""

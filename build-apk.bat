@@ -4,13 +4,12 @@ cd /d "%~dp0"
 
 echo.
 echo ==========================================
-echo   Easy English - Android APK Builder
+echo   EnglishAPK - Android APK Builder
 echo ==========================================
 echo.
 
 where node >nul 2>nul || (
   echo [ERROR] Node.js is not installed or not in PATH.
-  echo Install Node.js and run this script again.
   pause
   exit /b 1
 )
@@ -58,26 +57,32 @@ call npx cordova@12.0.0 build android
 if errorlevel 1 goto :fail
 
 echo.
-echo [6/6] Locating APK...
-set "APK=%CD%\platforms\android\app\build\outputs\apk\debug\app-debug.apk"
+echo [6/6] Renaming APK...
+set "SOURCE=%CD%\platforms\android\app\build\outputs\apk\debug\app-debug.apk"
+set "DIST=%CD%\dist"
+set "APK=%DIST%\EnglishAPK-debug.apk"
 
-if exist "%APK%" (
-  echo.
-  echo ==========================================
-  echo   BUILD SUCCESSFUL
-  echo ==========================================
-  echo APK:
-  echo %APK%
-  echo.
-  explorer /select,"%APK%"
+if not exist "%SOURCE%" (
+  echo [ERROR] Build finished but the APK was not found:
+  echo %SOURCE%
   pause
-  exit /b 0
+  exit /b 2
 )
 
-echo [WARNING] Build finished but the expected APK was not found at:
+if not exist "%DIST%" mkdir "%DIST%"
+copy /Y "%SOURCE%" "%APK%" >nul
+if errorlevel 1 goto :fail
+
+echo.
+echo ==========================================
+echo   BUILD SUCCESSFUL
+echo ==========================================
+echo APK:
 echo %APK%
+echo.
+explorer /select,"%APK%"
 pause
-exit /b 2
+exit /b 0
 
 :requirements_fail
 echo.

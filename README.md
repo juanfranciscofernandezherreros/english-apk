@@ -1,1 +1,61 @@
-# english-apk
+# Easy English APK
+
+A book-style offline English learning app for Android.
+
+## Features
+
+- 10,000 grammar examples.
+- 25 grammar chapters.
+- Levels A1, A2, B1, B2 and C1.
+- Book-style interface inspired by the Easy English blog.
+- English-first interface.
+- Optional Spanish support inside example cards.
+- Search by English, Spanish, grammar topic or level.
+- Saved favourites stored locally on the device.
+- Random practice mode.
+- Fully offline after installation.
+
+## Grammar chapters
+
+### A1
+Present Simple, Present Continuous, Past Simple, Future with will, Can / Can't.
+
+### A2
+Past Continuous, Present Perfect, Going to, Must / Have to, Should / Shouldn't.
+
+### B1
+Comparatives & Superlatives, First Conditional, Second Conditional, Passive Voice, Relative Clauses.
+
+### B2
+Gerunds & Infinitives, Third Conditional, Reported Speech, Wish / If only, Modal Deduction.
+
+### C1
+Mixed Conditionals, Inversion, Cleft Sentences, Advanced Modals, Participle Clauses.
+
+Each chapter contains 400 examples: **25 × 400 = 10,000 phrases**.
+
+## Build
+
+```bash
+npm install
+npm run test:grammar
+npm run build:android
+```
+
+The debug APK is generated at:
+
+```
+platforms/android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+GitHub Actions also builds the debug APK automatically on pushes to `main`.
+
+## App structure
+
+- `www/index.html` — full app interface.
+- `www/grammar-data.js` — offline 10,000-example grammar corpus generator.
+- `scripts/validate-grammar.js` — validates the corpus.
+- `config.xml` — Cordova Android configuration.
+- `.github/workflows/build-android.yml` — automatic APK build.
+
+Design inspired by: https://jnfz92.github.io/

@@ -1,4 +1,4 @@
-# Easy English APK
+# EnglishAPK
 
 A book-style offline English learning app for Android.
 
@@ -42,13 +42,19 @@ npm run test:grammar
 npm run build:android
 ```
 
-The debug APK is generated at:
+The Android APK is generated directly as:
 
 ```
-platforms/android/app/build/outputs/apk/debug/app-debug.apk
+platforms/android/app/build/outputs/apk/debug/EnglishAPK.apk
 ```
 
-GitHub Actions also builds the debug APK automatically on pushes to `main`.
+The build script also places the final distributable file at:
+
+```
+dist/EnglishAPK.apk
+```
+
+GitHub Actions builds and publishes `EnglishAPK.apk` automatically on pushes to `main`.
 
 ## App structure
 
@@ -75,7 +81,7 @@ Or from PowerShell:
 ./build-apk.ps1
 ```
 
-The script installs dependencies, validates the 10,000-example corpus, adds Android if needed, checks requirements, builds the APK, and opens its location automatically.
+The script installs dependencies, validates the 10,000-example corpus, builds `EnglishAPK.apk`, verifies the final filename, and opens its location automatically.
 
 
 ## JSON question bank

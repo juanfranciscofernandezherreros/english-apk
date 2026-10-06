@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.easyenglish.grammarbook" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Easy English</name>
+    <description>Offline English grammar book with 10,000 examples from A1 to C1.</description>
+    <author href="https://jnfz92.github.io/">Juan Francisco Fernandez Herreros</author>
+    <content src="index.html" />
+    <plugin name="cordova-plugin-whitelist" spec="1" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="mailto:*" />
+    <preference name="Fullscreen" value="false" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="BackgroundColor" value="0xfff7f5ef" />
+    <platform name="android">
+        <preference name="AndroidWindowSplashScreenBackground" value="#235347" />
+    </platform>
+</widget>

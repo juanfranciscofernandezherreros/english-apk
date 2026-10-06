@@ -1,0 +1,9 @@
+// Applied automatically by Cordova from config.xml.
+// Force the APK file itself to be named EnglishAPK.apk for every Android build type.
+android {
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            output.outputFileName = "EnglishAPK.apk"
+        }
+    }
+}

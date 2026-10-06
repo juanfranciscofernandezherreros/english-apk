@@ -22,38 +22,24 @@ foreach ($cmd in @("node","npm","java")) {
     }
 }
 
-Run-Step "[1/6] Installing project dependencies..." { npm install }
-Run-Step "[2/6] Validating 10,000 grammar examples..." { npm run test:grammar }
+Run-Step "[1/4] Installing project dependencies..." { npm install }
+Run-Step "[2/4] Validating 10,000 grammar examples..." { npm run test:grammar }
+Run-Step "[3/4] Building EnglishAPK..." { npm run build:android }
 
-if (-not (Test-Path "platforms/android")) {
-    Run-Step "[3/6] Adding Android platform..." { npx cordova@12.0.0 platform add android@14.0.1 }
-} else {
-    Write-Host ""
-    Write-Host "[3/6] Android platform already exists." -ForegroundColor Green
-}
-
-Run-Step "[4/6] Checking Android requirements..." { npx cordova@12.0.0 requirements android }
-Run-Step "[5/6] Building debug APK..." { npx cordova@12.0.0 build android }
-
-$sourceApk = Join-Path $PSScriptRoot "platforms/android/app/build/outputs/apk/debug/app-debug.apk"
-$distDir = Join-Path $PSScriptRoot "dist"
-$finalApk = Join-Path $distDir "EnglishAPK-debug.apk"
+$apk = Join-Path $PSScriptRoot "dist/EnglishAPK.apk"
 
 Write-Host ""
-Write-Host "[6/6] Renaming APK..." -ForegroundColor Cyan
+Write-Host "[4/4] Verifying EnglishAPK.apk..." -ForegroundColor Cyan
 
-if (-not (Test-Path $sourceApk)) {
-    throw "Build finished, but APK was not found at $sourceApk"
+if (-not (Test-Path $apk)) {
+    throw "Build finished, but EnglishAPK.apk was not found at $apk"
 }
-
-New-Item -ItemType Directory -Force -Path $distDir | Out-Null
-Copy-Item -Force $sourceApk $finalApk
 
 Write-Host ""
 Write-Host "=========================================="
 Write-Host "  BUILD SUCCESSFUL"
 Write-Host "=========================================="
 Write-Host "APK:"
-Write-Host $finalApk
+Write-Host $apk
 Write-Host ""
-Start-Process explorer.exe "/select,`"$finalApk`""
+Start-Process explorer.exe "/select,`"$apk`""

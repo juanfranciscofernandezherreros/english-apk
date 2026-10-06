@@ -33,12 +33,15 @@ jobs:
       - name: Build EnglishAPK
         run: npm run build:android
 
-      - name: Verify APK filename
-        run: test -f dist/EnglishAPK-debug.apk
+      - name: Verify native APK filename
+        run: test -f platforms/android/app/build/outputs/apk/debug/EnglishAPK.apk
+
+      - name: Verify final APK filename
+        run: test -f dist/EnglishAPK.apk
 
       - name: Upload EnglishAPK
         uses: actions/upload-artifact@v4
         with:
-          name: EnglishAPK-debug
-          path: dist/EnglishAPK-debug.apk
+          name: EnglishAPK
+          path: dist/EnglishAPK.apk
           if-no-files-found: error

@@ -6,12 +6,11 @@ const isWindows = process.platform === "win32";
 const npx = isWindows ? "npx.cmd" : "npx";
 const release = process.argv.includes("--release");
 const variant = release ? "release" : "debug";
-const sourceName = release ? "app-release-unsigned.apk" : "app-debug.apk";
 const sourceApk = path.join(
-  "platforms", "android", "app", "build", "outputs", "apk", variant, sourceName
+  "platforms", "android", "app", "build", "outputs", "apk", variant, "EnglishAPK.apk"
 );
 const outputDir = "dist";
-const outputApk = path.join(outputDir, `EnglishAPK-${variant}.apk`);
+const outputApk = path.join(outputDir, "EnglishAPK.apk");
 
 function run(args) {
   const result = spawnSync(npx, args, { stdio: "inherit", shell: false });
@@ -26,9 +25,6 @@ if (!fs.existsSync("platforms/android")) {
   console.log("Android platform already present.");
 }
 
-// cordova requirements can fail in CI when avdmanager is unavailable even though
-// the SDK components needed to compile are installed. Keep it for local builds,
-// but skip that non-build-critical check in GitHub Actions/CI.
 if (!process.env.CI) {
   console.log("Checking Android build requirements...");
   run(["cordova", "requirements", "android"]);
@@ -36,13 +32,13 @@ if (!process.env.CI) {
   console.log("CI detected: skipping cordova requirements check.");
 }
 
-console.log(release ? "Building Android release..." : "Building Android debug APK...");
+console.log(release ? "Building EnglishAPK release..." : "Building EnglishAPK...");
 const args = ["cordova", "build", "android"];
 if (release) args.push("--release");
 run(args);
 
 if (!fs.existsSync(sourceApk)) {
-  throw new Error(`Build finished, but APK was not found at ${sourceApk}`);
+  throw new Error(`Build finished, but EnglishAPK.apk was not found at ${sourceApk}`);
 }
 
 fs.mkdirSync(outputDir, { recursive: true });

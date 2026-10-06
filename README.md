@@ -53,7 +53,7 @@ GitHub Actions also builds the debug APK automatically on pushes to `main`.
 ## App structure
 
 - `www/index.html` — full app interface.
-- `www/grammar-data.js` — offline 10,000-example grammar corpus generator.
+- `www/data/a1.json` … `www/data/c1.json` — 10,000 offline grammar questions stored as JSON.
 - `scripts/validate-grammar.js` — validates the corpus.
 - `config.xml` — Cordova Android configuration.
 - `.github/workflows/build-android.yml` — automatic APK build.
@@ -76,3 +76,16 @@ Or from PowerShell:
 ```
 
 The script installs dependencies, validates the 10,000-example corpus, adds Android if needed, checks requirements, builds the APK, and opens its location automatically.
+
+
+## JSON question bank
+
+Questions are loaded from local JSON files at runtime:
+
+- `www/data/a1.json`
+- `www/data/a2.json`
+- `www/data/b1.json`
+- `www/data/b2.json`
+- `www/data/c1.json`
+
+Each file contains 2,000 entries. The app does not generate grammar questions in JavaScript anymore.

@@ -1,0 +1,44 @@
+name: Build Easy English APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Validate grammar corpus
+        run: npm run test:grammar
+
+      - name: Add Android platform
+        run: npx cordova@12.0.0 platform add android@14.0.1
+
+      - name: Build debug APK
+        run: npx cordova@12.0.0 build android
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: easy-english-debug-apk
+          path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

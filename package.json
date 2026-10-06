@@ -1,8 +1,8 @@
 {
   "name": "easy-english-grammar-book",
-  "displayName": "Easy English",
+  "displayName": "English 2026-10-06",
   "version": "1.0.0",
-  "description": "Offline English grammar book with 10,000 grammar examples for Android",
+  "description": "English grammar exam with 10,000 JSON questions for Android",
   "author": "Juan Francisco Fernandez Herreros",
   "license": "MIT",
   "scripts": {

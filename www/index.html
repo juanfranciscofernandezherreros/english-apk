@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: content:;">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="initial-scale=1,width=device-width,viewport-fit=cover">
+  <title>Easy English · Grammar Book</title>
+  <style>
+    :root{
+      --paper:#f7f5ef;--page:#fffdf8;--ink:#1f2933;--muted:#667085;--green:#235347;
+      --green2:#183d34;--soft:#dbece6;--gold:#f4b860;--line:#e7e0d4;--danger:#a14d43;
+      --shadow:0 20px 55px rgba(31,41,51,.12)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:linear-gradient(rgba(247,245,239,.96),rgba(247,245,239,.96)),repeating-linear-gradient(0deg,rgba(31,41,51,.03) 0 1px,transparent 1px 5px);min-height:100vh}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .app{max-width:1000px;margin:auto;padding:env(safe-area-inset-top) 16px calc(92px + env(safe-area-inset-bottom))}
+    .topbar{position:sticky;top:0;z-index:20;margin:0 -16px;padding:12px 16px;background:rgba(247,245,239,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:900}.mark{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:var(--green);color:#fff;font-size:13px}
+    .count-pill{font-size:12px;font-weight:850;color:var(--green);background:var(--soft);padding:7px 10px;border-radius:999px}
+    .cover{margin:24px 0 18px;padding:42px 30px 34px;border-radius:8px 28px 28px 8px;border-left:10px solid var(--green2);color:#fff;background:linear-gradient(90deg,rgba(0,0,0,.12),transparent 30px),var(--green);box-shadow:var(--shadow);position:relative;overflow:hidden}
+    .cover:before{content:"";position:absolute;inset:14px;border:1px solid rgba(255,255,255,.2);border-radius:4px 18px 18px 4px;pointer-events:none}
+    .kicker{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:900;color:var(--gold)}
+    h1,h2,h3{line-height:1.08}h1{font:700 clamp(48px,12vw,82px)/.96 Georgia,"Times New Roman",serif;letter-spacing:-.055em;margin:24px 0 16px}
+    .cover p{max-width:620px;color:rgba(255,255,255,.78);font-size:17px;line-height:1.6;margin:0 0 24px}
+    .cover-meta{display:flex;flex-wrap:wrap;gap:8px}.cover-meta span{font-size:11px;font-weight:800;border:1px solid rgba(255,255,255,.22);padding:6px 9px;border-radius:999px}
+    .page{background:var(--page);border:1px solid var(--line);border-radius:5px 22px 22px 5px;box-shadow:0 14px 38px rgba(31,41,51,.07);padding:28px 22px 32px 34px;margin:18px 0;position:relative}
+    .page:before{content:"";position:absolute;left:18px;top:20px;bottom:20px;width:1px;background:#eee7dc}
+    .section-title{font:700 34px/1.05 Georgia,"Times New Roman",serif;margin:0 0 8px;letter-spacing:-.035em}.section-sub{color:var(--muted);margin:0 0 22px;line-height:1.55}
+    .index-list{display:grid;gap:0}.chapter{display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center;padding:15px 0;border-bottom:1px dotted #cfc6b8;background:none;border-top:0;border-left:0;border-right:0;width:100%;text-align:left;color:var(--ink)}
+    .chapter-no{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:var(--green)}.chapter strong{font:700 18px Georgia,"Times New Roman",serif}.chapter small{color:var(--muted)}
+    .controls{display:grid;gap:12px}.search{width:100%;border:1px solid var(--line);background:#fff;border-radius:14px;padding:14px 15px;outline:none}.search:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(35,83,71,.1)}
+    .chips{display:flex;gap:8px;overflow:auto;padding-bottom:4px;scrollbar-width:none}.chip{flex:0 0 auto;border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:999px;font-size:12px;font-weight:850;color:var(--muted)}.chip.active{background:var(--green);border-color:var(--green);color:#fff}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.stat{background:#efe9da;border-radius:14px;padding:14px}.stat strong{display:block;font-size:22px}.stat span{font-size:11px;color:var(--muted)}
+    .phrase-list{display:grid;gap:12px;margin-top:18px}.phrase{border:1px solid var(--line);background:#fff;border-radius:16px;padding:17px;position:relative}.phrase-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.meta{font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:900;color:var(--green)}.fav{border:0;background:transparent;font-size:22px;line-height:1;color:#b7b0a5;padding:0}.fav.on{color:var(--gold)}
+    .english{font-weight:850;font-size:17px;margin:10px 0 5px;line-height:1.45}.spanish{color:var(--muted);font-size:14px;line-height:1.45}.note{margin-top:10px;font-size:11px;color:var(--green);font-weight:800}
+    .empty{text-align:center;color:var(--muted);padding:36px 10px}.load{display:block;width:100%;margin:16px 0 0;border:1px solid var(--line);background:#fff;padding:13px;border-radius:13px;font-weight:850;color:var(--green)}
+    .practice-card{background:#1f2933;color:#fff;border-radius:20px;padding:22px}.practice-card .spanish{color:rgba(255,255,255,.68)}.practice-actions{display:flex;gap:10px;margin-top:16px}.primary,.secondary{border:0;border-radius:12px;padding:12px 14px;font-weight:850}.primary{background:var(--gold);color:#1f2933}.secondary{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.16)}
+    .bottomnav{position:fixed;z-index:30;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));width:min(540px,calc(100% - 24px));background:#1f2933;color:#fff;border-radius:18px;display:grid;grid-template-columns:repeat(4,1fr);padding:7px;box-shadow:0 16px 45px rgba(31,41,51,.28)}
+    .navbtn{border:0;background:transparent;color:rgba(255,255,255,.62);padding:9px 4px;border-radius:12px;font-size:10px;font-weight:800}.navbtn span{display:block;font-size:18px;margin-bottom:2px}.navbtn.active{background:rgba(255,255,255,.1);color:#fff}
+    .screen{display:none}.screen.active{display:block}
+    .topic-badge{display:inline-flex;background:var(--soft);color:var(--green);font-size:11px;font-weight:900;border-radius:999px;padding:6px 9px;margin:3px 3px 0 0}
+    @media(min-width:700px){.app{padding-left:24px;padding-right:24px}.page{padding:38px 38px 42px 48px}.phrase-list{grid-template-columns:1fr 1fr}.cover{padding:58px 52px}.chapter strong{font-size:21px}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand"><span class="mark">EN</span><span>Easy English</span></div>
+      <span class="count-pill" id="globalCount">10,000 phrases</span>
+    </header>
+
+    <main>
+      <section id="home" class="screen active">
+        <div class="cover">
+          <span class="kicker">Grammar book · Offline edition</span>
+          <h1>Easy English</h1>
+          <p>A bilingual grammar book in your pocket: 10,000 English examples with Spanish support, organised from A1 to B2 and designed like the Easy English blog.</p>
+          <div class="cover-meta"><span>10,000 examples</span><span>25 grammar chapters</span><span>English + Spanish</span><span>Works offline</span></div>
+        </div>
+
+        <section class="page">
+          <span class="kicker" style="color:var(--green)">Table of contents</span>
+          <h2 class="section-title">Grammar index</h2>
+          <p class="section-sub">Each chapter contains 400 examples. Open a chapter to study its phrases, search within the book, or save examples to your favourites.</p>
+          <div id="chapterIndex" class="index-list"></div>
+        </section>
+
+        <section class="page">
+          <h2 class="section-title">Your book</h2>
+          <div class="stats">
+            <div class="stat"><strong>10k</strong><span>grammar examples</span></div>
+            <div class="stat"><strong>25</strong><span>chapters</span></div>
+            <div class="stat"><strong id="favStat">0</strong><span>favourites</span></div>
+          </div>
+        </section>
+      </section>
+
+      <section id="library" class="screen">
+        <section class="page">
+          <span class="kicker" style="color:var(--green)">Reference library</span>
+          <h2 class="section-title">10,000 grammar phrases</h2>
+          <p class="section-sub" id="resultSummary">Search and filter the complete offline collection.</p>
+          <div class="controls">
+            <input id="searchInput" class="search" type="search" placeholder="Search English or Spanish…" autocomplete="off">
+            <div id="levelChips" class="chips"></div>
+            <div id="topicChips" class="chips"></div>
+          </div>
+          <div id="phraseList" class="phrase-list"></div>
+          <button id="loadMore" class="load">Show more</button>
+        </section>
+      </section>
+
+      <section id="practice" class="screen">
+        <section class="page">
+          <span class="kicker" style="color:var(--green)">Workbook</span>
+          <h2 class="section-title">Random practice</h2>
+          <p class="section-sub">Read the English sentence, say the meaning aloud, then reveal the Spanish translation.</p>
+          <div class="practice-card">
+            <div class="meta" id="practiceMeta" style="color:var(--gold)"></div>
+            <div class="english" id="practiceEnglish"></div>
+            <div class="spanish" id="practiceSpanish" hidden></div>
+            <div class="practice-actions">
+              <button class="primary" id="revealBtn">Reveal translation</button>
+              <button class="secondary" id="nextBtn">Next phrase</button>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section id="favorites" class="screen">
+        <section class="page">
+          <span class="kicker" style="color:var(--green)">Bookmarks</span>
+          <h2 class="section-title">My favourites</h2>
+          <p class="section-sub">Saved phrases stay on this device and are available offline.</p>
+          <div id="favoriteList" class="phrase-list"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <nav class="bottomnav" aria-label="App navigation">
+    <button class="navbtn active" data-screen="home"><span>⌂</span>Book</button>
+    <button class="navbtn" data-screen="library"><span>☰</span>Library</button>
+    <button class="navbtn" data-screen="practice"><span>✦</span>Practice</button>
+    <button class="navbtn" data-screen="favorites"><span>★</span>Saved</button>
+  </nav>
+
+  <script src="cordova.js"></script>
+  <script src="grammar-data.js"></script>
+  <script>
+    (() => {
+      const phrases = window.EASY_ENGLISH_PHRASES || [];
+      const topics = window.EASY_ENGLISH_TOPICS || [];
+      const $ = (id) => document.getElementById(id);
+      let favs = new Set(JSON.parse(localStorage.getItem('easyEnglishFavs') || '[]'));
+      let level = 'All', topic = 'All', query = '', visible = 40, practiceItem = null;
+
+      function saveFavs(){
+        localStorage.setItem('easyEnglishFavs', JSON.stringify([...favs]));
+        $('favStat').textContent = favs.size;
+      }
+
+      function phraseCard(p){
+        const el = document.createElement('article');
+        el.className = 'phrase';
+        el.innerHTML = '<div class="phrase-head"><div class="meta">'+p.level+' · '+p.topic+'</div><button class="fav '+(favs.has(p.id)?'on':'')+'" aria-label="Favourite">★</button></div>'+
+          '<div class="english">'+escapeHtml(p.english)+'</div>'+
+          '<div class="spanish">'+escapeHtml(p.spanish)+'</div>'+
+          '<div class="note">'+escapeHtml(p.note)+'</div>';
+        el.querySelector('.fav').addEventListener('click', (e)=>{
+          if(favs.has(p.id)) favs.delete(p.id); else favs.add(p.id);
+          e.currentTarget.classList.toggle('on', favs.has(p.id));
+          saveFavs();
+          if(document.querySelector('#favorites.active')) renderFavorites();
+        });
+        return el;
+      }
+
+      function escapeHtml(v){
+        return String(v).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+      }
+
+      function filtered(){
+        const q = query.trim().toLowerCase();
+        return phrases.filter(p =>
+          (level === 'All' || p.level === level) &&
+          (topic === 'All' || p.topic === topic) &&
+          (!q || p.english.toLowerCase().includes(q) || p.spanish.toLowerCase().includes(q) || p.topic.toLowerCase().includes(q))
+        );
+      }
+
+      function renderLibrary(reset=true){
+        if(reset) visible = 40;
+        const data = filtered();
+        const list = $('phraseList');
+        list.innerHTML = '';
+        data.slice(0, visible).forEach(p=>list.appendChild(phraseCard(p)));
+        $('resultSummary').textContent = data.length.toLocaleString()+' matching phrases · showing '+Math.min(visible,data.length).toLocaleString();
+        $('loadMore').hidden = visible >= data.length;
+      }
+
+      function makeChips(){
+        const levels = ['All','A1','A2','B1','B2'];
+        $('levelChips').innerHTML = '';
+        levels.forEach(x=>{
+          const b=document.createElement('button');b.className='chip'+(level===x?' active':'');b.textContent=x;
+          b.onclick=()=>{level=x;topic='All';makeChips();renderLibrary();};$('levelChips').appendChild(b);
+        });
+        $('topicChips').innerHTML = '';
+        ['All',...topics.filter(t=>level==='All'||t.level===level).map(t=>t.name)].forEach(x=>{
+          const b=document.createElement('button');b.className='chip'+(topic===x?' active':'');b.textContent=x;
+          b.onclick=()=>{topic=x;makeChips();renderLibrary();};$('topicChips').appendChild(b);
+        });
+      }
+
+      function renderIndex(){
+        const box=$('chapterIndex'); box.innerHTML='';
+        topics.forEach((t,i)=>{
+          const b=document.createElement('button');b.className='chapter';
+          b.innerHTML='<span class="chapter-no">Ch. '+String(i+1).padStart(2,'0')+'</span><strong>'+escapeHtml(t.name)+'</strong><small>'+t.level+' · 400</small>';
+          b.onclick=()=>{ level=t.level; topic=t.name; makeChips(); renderLibrary(); showScreen('library'); };
+          box.appendChild(b);
+        });
+      }
+
+      function renderFavorites(){
+        const list=$('favoriteList'); list.innerHTML='';
+        const data=phrases.filter(p=>favs.has(p.id));
+        if(!data.length){list.innerHTML='<div class="empty">No favourites yet. Tap ★ on any phrase to save it.</div>';return;}
+        data.forEach(p=>list.appendChild(phraseCard(p)));
+      }
+
+      function newPractice(){
+        practiceItem = phrases[Math.floor(Math.random()*phrases.length)];
+        $('practiceMeta').textContent = practiceItem.level+' · '+practiceItem.topic;
+        $('practiceEnglish').textContent = practiceItem.english;
+        $('practiceSpanish').textContent = practiceItem.spanish;
+        $('practiceSpanish').hidden = true;
+        $('revealBtn').textContent = 'Reveal translation';
+      }
+
+      function showScreen(name){
+        document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===name));
+        document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));
+        if(name==='favorites') renderFavorites();
+        if(name==='practice' && !practiceItem) newPractice();
+        window.scrollTo({top:0,behavior:'smooth'});
+      }
+
+      document.querySelectorAll('.navbtn').forEach(b=>b.onclick=()=>showScreen(b.dataset.screen));
+      $('searchInput').addEventListener('input', e=>{query=e.target.value;renderLibrary();});
+      $('loadMore').onclick=()=>{visible+=40;renderLibrary(false);};
+      $('revealBtn').onclick=()=>{$('practiceSpanish').hidden=false;$('revealBtn').textContent='Translation revealed';};
+      $('nextBtn').onclick=newPractice;
+
+      renderIndex(); makeChips(); renderLibrary(); saveFavs(); newPractice();
+      $('globalCount').textContent = phrases.length.toLocaleString()+' phrases';
+    })();
+  </script>
+</body>
+</html>

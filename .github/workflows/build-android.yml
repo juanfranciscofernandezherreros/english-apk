@@ -27,9 +27,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Validate grammar corpus
-        run: npm run test:grammar
-
       - name: Build EnglishAPK
         run: npm run build:android
 

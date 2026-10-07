@@ -2,11 +2,10 @@
   "name": "easy-english-grammar-book",
   "displayName": "EnglishAPK",
   "version": "1.0.0",
-  "description": "English grammar exam with 10,000 JSON questions for Android",
+  "description": "Offline English learning course for Android",
   "author": "Juan Francisco Fernandez Herreros",
   "license": "MIT",
   "scripts": {
-    "test:grammar": "node scripts/validate-grammar.js",
     "build:android": "node scripts/build-android.js",
     "build:android:release": "node scripts/build-android.js --release"
   },

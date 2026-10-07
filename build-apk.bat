@@ -27,22 +27,17 @@ where java >nul 2>nul || (
   exit /b 1
 )
 
-echo [1/4] Installing project dependencies...
+echo [1/3] Installing project dependencies...
 call npm install
 if errorlevel 1 goto :fail
 
 echo.
-echo [2/4] Validating 10,000 grammar examples...
-call npm run test:grammar
-if errorlevel 1 goto :fail
-
-echo.
-echo [3/4] Building EnglishAPK...
+echo [2/3] Building EnglishAPK...
 call npm run build:android
 if errorlevel 1 goto :fail
 
 echo.
-echo [4/4] Verifying EnglishAPK.apk...
+echo [3/3] Verifying EnglishAPK.apk...
 set "APK=%CD%\dist\EnglishAPK.apk"
 
 if not exist "%APK%" (

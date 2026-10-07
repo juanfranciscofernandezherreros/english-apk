@@ -1,97 +1,110 @@
-# EnglishAPK
+# Easy English · Educational Android App
 
-A book-style offline English learning app for Android.
+A custom offline English-learning app for Android focused on **theory + examples + guided practice**.
 
-## Features
+## Educational approach
 
-- 10,000 grammar examples.
-- 25 grammar chapters.
-- Levels A1, A2, B1, B2 and C1.
-- Book-style interface inspired by the Easy English blog.
-- English-first interface.
-- Optional Spanish support inside example cards.
-- Search by English, Spanish, grammar topic or level.
-- Saved favourites stored locally on the device.
-- Random practice mode.
-- Fully offline after installation.
+The app is no longer designed as a 10,000-question grammar exam. It is structured as a small course:
 
-## Grammar chapters
+1. Read a clear explanation in Spanish.
+2. Study bilingual examples.
+3. Review structures, time markers and common mistakes.
+4. Practise the exact topic.
+5. Read an explanation after every answer.
+6. Use **Tense Trainer** for mixed verb-tense practice.
 
-### A1
-Present Simple, Present Continuous, Past Simple, Future with will, Can / Can't.
+## Main course: verb tenses
 
-### A2
-Past Continuous, Present Perfect, Going to, Must / Have to, Should / Shouldn't.
+- Verb tense overview
+- Present Simple
+- Present Continuous
+- Present Perfect
+- Present Perfect Continuous
+- Present tense comparisons
+- Past Simple
+- Past Continuous
+- Past Perfect
+- Past Perfect Continuous
+- Future with will
+- Going to
+- Present Continuous for future arrangements
+- Present Simple for timetables
+- Future Continuous
+- Future Perfect
+- Present Perfect vs Past Simple
+- Never vs yet
+- Stative verbs
+- Mixed-tense trainer
 
-### B1
-Comparatives & Superlatives, First Conditional, Second Conditional, Passive Voice, Relative Clauses.
+## Additional learning areas
 
-### B2
-Gerunds & Infinitives, Third Conditional, Reported Speech, Wish / If only, Modal Deduction.
+### Grammar
+- Essential modal verbs
+- Conditionals
 
-### C1
-Mixed Conditionals, Inversion, Cleft Sentences, Advanced Modals, Participle Clauses.
+### Vocabulary
+- Useful phrasal verbs
+- Environment and pollution
 
-Each chapter contains 400 examples: **25 × 400 = 10,000 phrases**.
+### Speaking
+- Giving opinions
+- Polite disagreement
+- Useful discourse markers
+
+The structure is intentionally content-driven so additional Easy English blog lessons can be added without rebuilding the learning model.
+
+## Practice design
+
+Questions are handcrafted around the lesson content rather than generated only from a large phrase bank. Current exercise styles include:
+
+- choose the correct tense;
+- complete a sentence;
+- distinguish similar tenses;
+- identify common mistakes;
+- vocabulary in context;
+- meaning and usage questions;
+- immediate answer explanations.
+
+## Offline
+
+All lesson and practice content used by the app is bundled inside the APK and works offline.
+
+## Source material
+
+Educational material is adapted from the Easy English blog:
+
+https://jnfz92.github.io/
+
+Important source articles include the guides to present, past and future tenses, Present Perfect vs Past Simple, never vs yet, future plans and stative verbs.
 
 ## Build
 
 ```bash
 npm install
-npm run test:grammar
 npm run build:android
 ```
 
-The Android APK is generated directly as:
+The Android APK is generated at:
 
 ```
 platforms/android/app/build/outputs/apk/debug/EnglishAPK.apk
 ```
 
-The build script also places the final distributable file at:
+The build script also copies the distributable APK to:
 
 ```
 dist/EnglishAPK.apk
 ```
 
-GitHub Actions builds and publishes `EnglishAPK.apk` automatically on pushes to `main`.
+GitHub Actions builds the Android package on pushes to `main`.
 
-## App structure
+## Main files
 
-- `www/index.html` — full app interface.
-- `www/data/a1.json` … `www/data/c1.json` — 10,000 offline grammar questions stored as JSON.
-- `scripts/validate-grammar.js` — validates the corpus.
+- `www/index.html` — educational course UI, lesson content and practice engine.
+- `www/img/logo.svg` — app logo.
 - `config.xml` — Cordova Android configuration.
-- `.github/workflows/build-android.yml` — automatic APK build.
+- `.github/workflows/build-android.yml` — Android build workflow.
 
-Design inspired by: https://jnfz92.github.io/
+## Legacy question bank
 
-
-## One-click Windows build
-
-From File Explorer or CMD, run:
-
-```bat
-build-apk.bat
-```
-
-Or from PowerShell:
-
-```powershell
-./build-apk.ps1
-```
-
-The script installs dependencies, validates the 10,000-example corpus, builds `EnglishAPK.apk`, verifies the final filename, and opens its location automatically.
-
-
-## JSON question bank
-
-Questions are loaded from local JSON files at runtime:
-
-- `www/data/a1.json`
-- `www/data/a2.json`
-- `www/data/b1.json`
-- `www/data/b2.json`
-- `www/data/c1.json`
-
-Each file contains 2,000 entries. The app does not generate grammar questions in JavaScript anymore.
+The older JSON question bank remains in the repository for now, but the redesigned app does **not** load it at runtime. It can be removed later after the educational course version has been validated on-device.

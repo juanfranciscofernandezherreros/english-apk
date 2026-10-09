@@ -20,6 +20,9 @@ table{width:100%;border-collapse:collapse;margin:12px 0;background:#fff}th,td{bo
 .tabs{display:flex;gap:8px;overflow:auto;padding-bottom:4px}.tab{white-space:nowrap;border:1px solid var(--line);background:#fff;padding:10px 13px;border-radius:999px;font-weight:850;color:var(--green)}.tab.active{background:var(--green);color:#fff}
 .footer{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}
 @media(max-width:640px){.grid{grid-template-columns:1fr}h1{font-size:30px}}
+
+/* Biblioteca y perfil */
+.library-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.library-toolbar input,.library-toolbar select,.profile-input{padding:13px;border-radius:12px;border:1px solid var(--line);background:white;font:inherit;min-width:0}.library-toolbar input{flex:1;min-width:160px}.library-toolbar select{max-width:150px}.library-article{background:white;border:1px solid var(--line);border-radius:15px;text-align:left;padding:15px;display:flex;gap:10px;justify-content:space-between;align-items:center}.library-article strong{display:block}.library-article small{color:var(--muted)}.library-article.completed{border-color:var(--ok);background:#eff8f2}.article-body{overflow-wrap:anywhere;line-height:1.75}.article-body img{max-width:100%;height:auto}.article-body .scroll{overflow:auto}.article-body table{font-size:14px}.article-body pre{overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#eaf3ec;padding:15px;border-radius:14px;text-align:center}.stat strong{display:block;color:var(--green);font-size:26px}.progress-meter{height:12px;overflow:hidden;border-radius:20px;background:#e1e6e2}.progress-meter>span{height:100%;display:block;background:var(--ok);transition:width .2s}.profile-input{width:100%;margin:8px 0}.profile-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}@media(max-width:400px){.stats{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -33,6 +36,8 @@ table{width:100%;border-collapse:collapse;margin:12px 0;background:#fff}th,td{bo
     <p class="muted">Una app educativa offline centrada especialmente en los tiempos verbales, con explicaciones en español, ejemplos bilingües, errores frecuentes y ejercicios razonados.</p>
   </div>
   <div class="grid">
+    <button class="course-card" id="openLibrary"><div class="meta">Biblioteca del blog</div><strong>📚 Todos los artículos</strong><span>Consulta el blog completo dentro de la app, incluso sin conexión.</span></button>
+    <button class="course-card" id="openProfile"><div class="meta">Seguimiento</div><strong>👤 Mi perfil y progreso</strong><span>Lecturas completadas, prácticas y porcentaje de aciertos.</span></button>
     <button class="course-card featured" data-open="tenses"><div class="meta" style="color:#dfece7">Curso principal</div><strong>Tiempos verbales</strong><span>Presente, pasado, futuro, perfectos y comparaciones.</span></button>
     <button class="course-card" data-open="grammar"><div class="meta">Gramática</div><strong>Gramática esencial</strong><span>Modales, condicionales, pasiva, gerundio e infinitivo y más.</span></button>
     <button class="course-card" data-open="vocab"><div class="meta">Vocabulario</div><strong>Vocabulario útil</strong><span>Phrasal verbs, medio ambiente, política y expresiones.</span></button>
@@ -40,6 +45,19 @@ table{width:100%;border-collapse:collapse;margin:12px 0;background:#fff}th,td{bo
   </div>
 </section>
 
+
+<section id="library" class="hidden">
+<button class="back" id="libraryBackHome">← Inicio</button>
+<div class="card"><div class="meta">Biblioteca Easy English · Offline</div><h1>Todos los artículos del blog</h1><p class="muted">Busca, lee y marca lo estudiado. El progreso se guarda en este dispositivo.</p>
+<div class="library-toolbar"><input id="librarySearch" type="search" placeholder="Buscar artículos..." aria-label="Buscar artículos"><select id="libraryCategory" aria-label="Categoría"><option value="all">Todas</option><option value="grammar">Gramática</option><option value="vocabulary">Vocabulario</option><option value="speaking">Speaking</option><option value="listening">Listening</option><option value="lesson">Lecciones</option></select></div>
+<div id="libraryCount" class="muted"></div><div id="libraryList" class="lesson-list"></div></div>
+</section>
+<section id="articleView" class="hidden"><button class="back" id="articleBackLibrary">← Biblioteca</button><article class="card"><div class="meta" id="articleMeta"></div><h1 id="articleTitle"></h1><div id="articleBody" class="article-body"></div><div class="actions"><button class="primary" id="markArticle">Marcar como leído ✓</button><button class="secondary" id="articleToLibrary">Ver más artículos</button></div></article></section>
+<section id="profileView" class="hidden"><button class="back" id="profileBackHome">← Inicio</button><div class="card">
+<div class="meta">Mi aprendizaje</div><h1>Perfil de estudiante</h1><label for="studentName">Tu nombre</label><input class="profile-input" id="studentName" type="text" maxlength="50" placeholder="Escribe tu nombre"><p class="muted">Este perfil se guarda solo en tu teléfono. No requiere registro ni envía tus datos a ningún servidor.</p>
+<div class="stats"><div class="stat"><strong id="readStat">0</strong><small>Artículos leídos</small></div><div class="stat"><strong id="quizStat">0</strong><small>Prácticas</small></div><div class="stat"><strong id="accuracyStat">0%</strong><small>Aciertos</small></div></div>
+<h2>Progreso del blog</h2><div class="progress-meter"><span id="readProgress" style="width:0%"></span></div><p id="readProgressText" class="muted"></p><h2>Mi actividad</h2><div id="recentActivity"></div>
+<div class="profile-actions"><button class="primary" id="saveProfile">Guardar nombre</button><button class="secondary" id="resetProfile">Reiniciar progreso</button></div></div></section>
 <section id="catalog" class="hidden">
   <button class="back" id="backHome">← Inicio</button>
   <div class="card">
@@ -65,6 +83,11 @@ table{width:100%;border-collapse:collapse;margin:12px 0;background:#fff}th,td{bo
 <div class="footer">Contenido educativo offline · Basado en Easy English</div>
 </div>
 <script src="cordova.js"></script>
+<script src="blog-data-1.js"></script>
+<script src="blog-data-2.js"></script>
+<script src="blog-data-3.js"></script>
+<script src="blog-data-4.js"></script>
+<script src="blog-data-5.js"></script>
 <script>
 const lessons={
 tenses:[
@@ -182,16 +205,33 @@ speaking:['Speaking','Expresiones y estrategias para hablar con más naturalidad
 };
 let currentCategory='tenses',currentLesson=null,quiz=[],qi=0,score=0,locked=false;
 const $=id=>document.getElementById(id);
-function show(id){['home','catalog','lessonView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));}
+function show(id){['home','catalog','lessonView','library','articleView','profileView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));}
 function openCatalog(cat){currentCategory=cat;const [t,d]=catalogInfo[cat];$('catalogMeta').textContent='Contenido';$('catalogTitle').textContent=t;$('catalogText').textContent=d;$('lessonList').innerHTML='';lessons[cat].forEach(l=>{const b=document.createElement('button');b.className='lesson-btn';b.innerHTML='<strong>'+l.title+'</strong><small>'+l.level+' · '+l.lead+'</small>';b.onclick=()=>openLesson(l);$('lessonList').appendChild(b)});show('catalog')}
 function openLesson(l){currentLesson=l;$('lessonMeta').textContent=l.level;$('lessonTitle').textContent=l.title;$('lessonLead').textContent=l.lead;$('lessonBody').innerHTML=l.body;$('quizArea').classList.add('hidden');show('lessonView');window.scrollTo(0,0)}
 function startQuiz(ids){quiz=ids.map(id=>questions[id]);qi=0;score=0;locked=false;$('quizArea').classList.remove('hidden');renderQuiz();$('quizArea').scrollIntoView({behavior:'smooth'})}
 function renderQuiz(){locked=false;const q=quiz[qi];$('quizPos').textContent='Pregunta '+(qi+1)+' de '+quiz.length;$('quizScore').textContent='Aciertos: '+score;$('quizQuestion').textContent=q.q;$('quizContext').textContent=q.c||'Elige la mejor respuesta.';$('quizAnswers').innerHTML='';$('quizExplain').classList.add('hidden');$('nextQuiz').classList.add('hidden');q.a.forEach((a,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>answer(i,b);$('quizAnswers').appendChild(b)})}
 function answer(i,b){if(locked)return;locked=true;const q=quiz[qi];document.querySelectorAll('.answer').forEach((x,j)=>{if(j===q.r)x.classList.add('correct');else if(j===i)x.classList.add('wrong');x.disabled=true});if(i===q.r)score++;$('quizScore').textContent='Aciertos: '+score;$('quizExplain').innerHTML='<strong>'+(i===q.r?'Correcto.':'Respuesta correcta: '+q.a[q.r])+'</strong><br>'+q.e;$('quizExplain').classList.remove('hidden');$('nextQuiz').textContent=qi===quiz.length-1?'Ver resultado':'Siguiente →';$('nextQuiz').classList.remove('hidden')}
-$('nextQuiz').onclick=()=>{if(qi<quiz.length-1){qi++;renderQuiz()}else{$('quizQuestion').textContent='Resultado: '+score+' / '+quiz.length;$('quizContext').textContent=score===quiz.length?'Excelente. Puedes repetir el tema o pasar al siguiente.':'Revisa las explicaciones del tema y vuelve a intentarlo.';$('quizAnswers').innerHTML='';$('quizExplain').classList.add('hidden');$('nextQuiz').classList.add('hidden')}};
+$('nextQuiz').onclick=()=>{if(qi<quiz.length-1){qi++;renderQuiz()}else{student.quizzes.push({date:new Date().toISOString(),topic:currentLesson?currentLesson.title:'Tense Trainer',score:score,total:quiz.length});student.totalCorrect+=score;student.totalQuestions+=quiz.length;saveProgressData();$('quizQuestion').textContent='Resultado: '+score+' / '+quiz.length;$('quizContext').textContent=score===quiz.length?'Excelente. Puedes repetir el tema o pasar al siguiente.':'Revisa las explicaciones del tema y vuelve a intentarlo.';$('quizAnswers').innerHTML='';$('quizExplain').classList.add('hidden');$('nextQuiz').classList.add('hidden')}};
 document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openCatalog(b.dataset.open));
 $('backHome').onclick=()=>show('home');$('backCatalog').onclick=()=>openCatalog(currentCategory);
 $('practiceBtn').onclick=()=>startQuiz(currentLesson.quiz);
 $('trainerBtn').onclick=()=>{const all=lessons.tenses.flatMap(l=>l.quiz);startQuiz(all.sort(()=>Math.random()-.5).slice(0,10))};
+
+/* El curso original sigue disponible; añadimos biblioteca y progreso local. */
+const blogArticles=window.EASY_ENGLISH_BLOG||[];
+const progressKey='easyEnglish.student.v1';
+function readProgressData(){try{return JSON.parse(localStorage.getItem(progressKey))||{}}catch(e){return {}}}
+let student=Object.assign({name:'',read:{},quizzes:[],totalCorrect:0,totalQuestions:0},readProgressData());
+function saveProgressData(){try{localStorage.setItem(progressKey,JSON.stringify(student))}catch(e){console.warn('No se ha podido guardar el progreso',e)}}
+const safeText=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let selectedArticle=null;
+function renderLibrary(){const q=$('librarySearch').value.toLocaleLowerCase().trim(),cat=$('libraryCategory').value;const filtered=blogArticles.filter(a=>(cat==='all'||a.category===cat)&&a.title.toLocaleLowerCase().includes(q));$('libraryList').replaceChildren();filtered.forEach(a=>{const b=document.createElement('button');b.className='library-article'+(student.read[a.url]?' completed':'');const label=document.createElement('span');label.innerHTML='<strong>'+safeText(a.title)+'</strong><small>'+safeText(a.category)+' · '+safeText(a.date)+(student.read[a.url]?' · ✓ Leído':'')+'</small>';const arrow=document.createElement('span');arrow.textContent='›';b.append(label,arrow);b.onclick=()=>openArticle(a);$('libraryList').appendChild(b)});$('libraryCount').textContent=filtered.length+' artículos · '+blogArticles.length+' en la biblioteca'}
+function openLibrary(){renderLibrary();show('library');window.scrollTo(0,0)}
+function openArticle(a){selectedArticle=a;$('articleMeta').textContent=a.category+' · '+a.date;$('articleTitle').textContent=a.title;$('articleBody').innerHTML=a.html;for(const link of $('articleBody').querySelectorAll('a[href]')){const href=link.getAttribute('href')||'';if(/^(javascript|data):/i.test(href)){link.removeAttribute('href');continue}const slug=href.split('/').pop();const dest=blogArticles.find(x=>x.url.endsWith('/'+slug));if(dest){link.removeAttribute('href');link.onclick=()=>{openArticle(dest);return false}}else if(/^https?:/i.test(href)){link.setAttribute('target','_blank')}}$('markArticle').textContent=student.read[a.url]?'✓ Leído · Desmarcar':'Marcar como leído ✓';show('articleView');window.scrollTo(0,0)}
+function markRead(){if(!selectedArticle)return;if(student.read[selectedArticle.url])delete student.read[selectedArticle.url];else student.read[selectedArticle.url]=new Date().toISOString();saveProgressData();openArticle(selectedArticle)}
+function renderProfile(){$('studentName').value=student.name;$('readStat').textContent=Object.keys(student.read).length;$('quizStat').textContent=student.quizzes.length;$('accuracyStat').textContent=student.totalQuestions?Math.round(student.totalCorrect/student.totalQuestions*100)+'%':'0%';const pc=blogArticles.length?Math.round(Object.keys(student.read).length/blogArticles.length*100):0;$('readProgress').style.width=pc+'%';$('readProgressText').textContent=Object.keys(student.read).length+' de '+blogArticles.length+' artículos completados ('+pc+'%)';$('recentActivity').replaceChildren();const recent=student.quizzes.slice(-5).reverse();if(!recent.length)$('recentActivity').textContent='Todavía no has realizado prácticas.';recent.forEach(x=>{const p=document.createElement('p');p.textContent=x.date.slice(0,10)+' · '+x.topic+' · '+x.score+'/'+x.total;$('recentActivity').appendChild(p)})}
+$('openLibrary').onclick=openLibrary;$('libraryBackHome').onclick=()=>show('home');$('articleBackLibrary').onclick=openLibrary;$('articleToLibrary').onclick=openLibrary;$('librarySearch').oninput=renderLibrary;$('libraryCategory').onchange=renderLibrary;$('markArticle').onclick=markRead;
+$('openProfile').onclick=()=>{renderProfile();show('profileView');window.scrollTo(0,0)};$('profileBackHome').onclick=()=>show('home');$('saveProfile').onclick=()=>{student.name=$('studentName').value.trim();saveProgressData();renderProfile()};$('resetProfile').onclick=()=>{if(confirm('¿Borrar tu progreso local y tu nombre?')){student={name:'',read:{},quizzes:[],totalCorrect:0,totalQuestions:0};saveProgressData();renderProfile()}};
+
 </script>
 </body></html>

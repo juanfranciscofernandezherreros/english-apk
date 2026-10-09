@@ -79,7 +79,7 @@ button:disabled{cursor:default}
 <div class="meta">Mi aprendizaje</div><h1>Perfil de estudiante</h1><label for="studentName">Tu nombre</label><input class="profile-input" id="studentName" type="text" maxlength="50" placeholder="Escribe tu nombre"><p class="muted">Este perfil se guarda solo en tu teléfono. No requiere registro ni envía tus datos a ningún servidor.</p>
 <div class="stats"><div class="stat"><strong id="readStat">0</strong><small>Artículos leídos</small></div><div class="stat"><strong id="quizStat">0</strong><small>Prácticas</small></div><div class="stat"><strong id="accuracyStat">0%</strong><small>Aciertos</small></div></div>
 <h2>Progreso del blog</h2><div class="progress-meter"><span id="readProgress" style="width:0%"></span></div><p id="readProgressText" class="muted"></p><h2>Mi actividad</h2><div id="recentActivity"></div>
-<div class="profile-actions"><button class="primary" id="saveProfile">Guardar nombre</button><button class="secondary" id="resetProfile">Reiniciar progreso</button></div></div></section>
+<div class="profile-actions"><button class="primary" id="saveProfile">Guardar nombre</button><button class="secondary" id="resetProfile">Reiniciar progreso</button><button class="secondary" id="logoutButton" type="button">↪ Cerrar sesión</button></div></div></section>
 <section id="catalog" class="hidden">
   <button class="back" id="backHome">← Inicio</button>
   <div class="card">
@@ -254,7 +254,7 @@ $('trainerBtn').onclick=()=>{const all=lessons.tenses.flatMap(l=>l.quiz);startQu
 const blogArticles=window.EASY_ENGLISH_BLOG||[];
 const progressKey='easyEnglish.student.v1';
 function readProgressData(){try{return JSON.parse(localStorage.getItem(progressKey))||{}}catch(e){return {}}}
-let student=Object.assign({name:'',read:{},quizzes:[],totalCorrect:0,totalQuestions:0},readProgressData());
+let student=Object.assign({name:'',read:{},quizzes:[],totalCorrect:0,totalQuestions:0,signedOut:false},readProgressData());
 function saveProgressData(){try{localStorage.setItem(progressKey,JSON.stringify(student))}catch(e){console.warn('No se ha podido guardar el progreso',e)}}
 const safeText=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let selectedArticle=null;
@@ -276,10 +276,22 @@ $('navProfile').onclick=()=>{renderProfile();show('profileView');window.scrollTo
 $('openLibrary').onclick=openLibrary;$('libraryBackHome').onclick=()=>show('home');$('articleBackLibrary').onclick=openLibrary;$('articleToLibrary').onclick=openLibrary;$('librarySearch').oninput=renderLibrary;$('libraryCategory').onchange=renderLibrary;$('markArticle').onclick=markRead;
 $('openProfile').onclick=()=>{renderProfile();show('profileView');window.scrollTo(0,0)};$('profileBackHome').onclick=()=>show('home');$('saveProfile').onclick=()=>{student.name=$('studentName').value.trim();saveProgressData();renderProfile()};$('resetProfile').onclick=()=>{if(confirm('¿Borrar tu progreso local y tu nombre?')){student={name:'',read:{},quizzes:[],totalCorrect:0,totalQuestions:0};saveProgressData();renderProfile()}};
 
-function finishWelcome(){const name=$('welcomeName').value.trim();if(!name){$('welcomeError').classList.remove('hidden');$('welcomeName').focus();return}student.name=name;saveProgressData();document.body.classList.remove('onboarding');show('home');window.scrollTo(0,0)}
+function finishWelcome(){
+const name=$('welcomeName').value.trim();
+if(!name){$('welcomeError').classList.remove('hidden');$('welcomeName').focus();return}
+if(student.signedOut&&student.name&&name!==student.name){$('welcomeError').textContent='Este dispositivo tiene un perfil guardado. Para recuperar tu progreso, usa tu nombre anterior.';$('welcomeError').classList.remove('hidden');return}
+student.name=name;student.signedOut=false;saveProgressData();document.body.classList.remove('onboarding');$('welcomeName').readOnly=false;show('home');window.scrollTo(0,0)}
+function showWelcome(){
+document.body.classList.add('onboarding');
+if(student.name){$('welcomeName').value=student.name;$('welcomeName').readOnly=true;$('createStudent').textContent='Continuar como '+student.name+' →';}
+else{$('welcomeName').value='';$('welcomeName').readOnly=false;$('createStudent').textContent='Crear mi perfil y empezar →'}
+$('welcomeError').classList.add('hidden');show('welcome');window.scrollTo(0,0);
+}
+$('logoutButton').onclick=()=>{student.signedOut=true;saveProgressData();showWelcome()};
+
 $('createStudent').onclick=finishWelcome;
 $('welcomeName').addEventListener('keydown',e=>{if(e.key==='Enter')finishWelcome()});
-if(!student.name||!student.name.trim()){document.body.classList.add('onboarding');show('welcome')}else{show('home')}
+if(!student.name||!student.name.trim()||student.signedOut){showWelcome()}else{show('home')}
 renderHomeProgress();
 </script>
 </body></html>

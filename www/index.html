@@ -44,6 +44,15 @@ button:disabled{cursor:default}
 .article-body iframe,.article-body video{max-width:100%}
 .article-body a{text-decoration:underline;color:var(--green);overflow-wrap:anywhere}
 @media(max-width:400px){.course-card{padding:15px}.topbar .pill{font-size:10px}.hero,.card{padding:18px 16px}}
+
+/* Ruta de aprendizaje offline */
+.quest-banner{background:linear-gradient(135deg,#19594c,#29846a);color:white;border-radius:24px;padding:22px;margin:14px 0 20px}
+.quest-banner h2{margin:8px 0;font-family:inherit}.quest-stats{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}.quest-stats span{background:#ffffff23;border:1px solid #ffffff35;border-radius:14px;padding:10px 13px;font-size:14px;font-weight:800}
+.quest-track{position:relative;max-width:570px;margin:auto;padding:12px 12px 24px}.quest-step{display:flex;align-items:center;gap:15px;margin:18px 0;position:relative}.quest-step:nth-child(even){padding-left:42px}.quest-step:before{content:'';position:absolute;left:24px;top:65px;height:32px;width:4px;background:#c8dfd2}.quest-step:last-child:before{display:none}
+.quest-node{width:66px;height:66px;border-radius:50%;border:5px solid #c5d4c9;background:#fff;color:var(--green);font-size:26px;font-weight:900;box-shadow:0 6px 0 #bed4c4;flex-shrink:0}
+.quest-node.available{border-color:#63b28e;background:#dff8e7}.quest-node.done{border-color:#257451;background:#338461;color:white}.quest-node.locked{opacity:.55}
+.quest-label{font-size:14px}.quest-label strong{display:block;font-size:16px}.quest-label small{color:var(--muted)}
+@media(max-width:480px){.quest-step:nth-child(even){padding-left:22px}.quest-node{width:60px;height:60px}}
 </style>
 </head>
 <body>
@@ -57,6 +66,7 @@ button:disabled{cursor:default}
     <h1>Aprende la regla, entiende el ejemplo y practica.</h1>
     <p class="muted">Una app educativa offline centrada especialmente en los tiempos verbales, con explicaciones en español, ejemplos bilingües, errores frecuentes y ejercicios razonados.</p>
   </div>
+  <div class="quest-banner"><div class="meta" style="color:#c8f1d9">Tu aventura en inglés · Offline</div><h2>Aprende un poco cada día</h2><p>Completa las lecciones, consigue XP y desbloquea nuevos temas. Todo funciona sin conexión.</p><div class="quest-stats"><span id="xpTop">⭐ 0 XP</span><span id="streakTop">🔥 0 días</span><span id="levelTop">🏅 Nivel 1</span></div></div><div class="section"><div class="meta">Tu camino de aprendizaje</div><h2>Ruta por niveles</h2><div id="learningPath" class="quest-track"></div></div>
   <div class="grid">
     <button class="course-card" id="openLibrary"><div class="meta">Biblioteca del blog</div><strong>📚 Todos los artículos</strong><span>Consulta el blog completo dentro de la app, incluso sin conexión.</span></button>
     <button class="course-card" id="openProfile"><div class="meta">Seguimiento</div><strong>👤 Mi perfil y progreso</strong><span>Lecturas completadas, prácticas y porcentaje de aciertos.</span></button>
@@ -244,7 +254,7 @@ function openLesson(l){currentLesson=l;$('lessonMeta').textContent=l.level;$('le
 function startQuiz(ids){quiz=ids.map(id=>questions[id]).filter(Boolean);if(!quiz.length){alert('Este tema todavía no tiene ejercicios disponibles.');return;}qi=0;score=0;locked=false;$('quizArea').classList.remove('hidden');renderQuiz();$('quizArea').scrollIntoView({behavior:'smooth'})}
 function renderQuiz(){locked=false;const q=quiz[qi];$('quizPos').textContent='Pregunta '+(qi+1)+' de '+quiz.length;$('quizScore').textContent='Aciertos: '+score;$('quizQuestion').textContent=q.q;$('quizContext').textContent=q.c||'Elige la mejor respuesta.';$('quizAnswers').innerHTML='';$('quizExplain').classList.add('hidden');$('nextQuiz').classList.add('hidden');q.a.forEach((a,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>answer(i,b);$('quizAnswers').appendChild(b)})}
 function answer(i,b){if(locked)return;locked=true;const q=quiz[qi];document.querySelectorAll('.answer').forEach((x,j)=>{if(j===q.r)x.classList.add('correct');else if(j===i)x.classList.add('wrong');x.disabled=true});if(i===q.r)score++;$('quizScore').textContent='Aciertos: '+score;$('quizExplain').innerHTML='<strong>'+(i===q.r?'Correcto.':'Respuesta correcta: '+q.a[q.r])+'</strong><br>'+q.e;$('quizExplain').classList.remove('hidden');$('nextQuiz').textContent=qi===quiz.length-1?'Ver resultado':'Siguiente →';$('nextQuiz').classList.remove('hidden')}
-$('nextQuiz').onclick=()=>{if(qi<quiz.length-1){qi++;renderQuiz()}else{student.quizzes.push({date:new Date().toISOString(),topic:currentLesson?currentLesson.title:'Tense Trainer',score:score,total:quiz.length});student.totalCorrect+=score;student.totalQuestions+=quiz.length;saveProgressData();$('quizQuestion').textContent='Resultado: '+score+' / '+quiz.length;$('quizContext').textContent=score===quiz.length?'Excelente. Puedes repetir el tema o pasar al siguiente.':'Revisa las explicaciones del tema y vuelve a intentarlo.';$('quizAnswers').innerHTML='';$('quizExplain').classList.add('hidden');$('nextQuiz').classList.add('hidden')}};
+$('nextQuiz').onclick=()=>{if(qi<quiz.length-1){qi++;renderQuiz()}else{student.quizzes.push({date:new Date().toISOString(),topic:currentLesson?currentLesson.title:'Tense Trainer',score:score,total:quiz.length});student.totalCorrect+=score;student.totalQuestions+=quiz.length;awardPracticeXP(currentLesson?currentLesson.id:'trainer',score,quiz.length);$('quizQuestion').textContent='Resultado: '+score+' / '+quiz.length;$('quizContext').textContent=score===quiz.length?'Excelente. Puedes repetir el tema o pasar al siguiente.':'Revisa las explicaciones del tema y vuelve a intentarlo.';$('quizAnswers').innerHTML='';$('quizExplain').classList.add('hidden');$('nextQuiz').classList.add('hidden')}};
 document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openCatalog(b.dataset.open));
 $('backHome').onclick=()=>show('home');$('backCatalog').onclick=()=>openCatalog(currentCategory);
 $('practiceBtn').onclick=()=>startQuiz(currentLesson.quiz);
@@ -262,11 +272,42 @@ function renderLibrary(){const q=$('librarySearch').value.toLocaleLowerCase().tr
 function openLibrary(){renderLibrary();show('library');window.scrollTo(0,0)}
 function openArticle(a){selectedArticle=a;$('articleMeta').textContent=a.category+' · '+a.date;$('articleTitle').textContent=a.title;$('articleBody').innerHTML=a.html;for(const link of $('articleBody').querySelectorAll('a[href]')){const href=link.getAttribute('href')||'';if(/^(javascript|data):/i.test(href)){link.removeAttribute('href');continue}const slug=href.split('#')[0].split('?')[0].split('/').pop();const dest=blogArticles.find(x=>x.url.endsWith('/'+slug));if(dest){link.removeAttribute('href');link.onclick=()=>{openArticle(dest);return false}}else if(/^https?:/i.test(href)){link.setAttribute('target','_blank');link.setAttribute('rel','noopener noreferrer')}else if(href.startsWith('#')){}else if(href.toLowerCase().endsWith('.pdf')){link.href='https://jnfz92.github.io/'+href.replace(/^\.\.\//,'')}else{link.removeAttribute('href');link.title='Enlace disponible en la versión web del blog'}}$('markArticle').textContent=student.read[a.url]?'✓ Leído · Desmarcar':'Marcar como leído ✓';show('articleView');window.scrollTo(0,0)}
 function markRead(){if(!selectedArticle)return;if(student.read[selectedArticle.url])delete student.read[selectedArticle.url];else student.read[selectedArticle.url]=new Date().toISOString();saveProgressData();openArticle(selectedArticle)}
+
+/* Ruta offline basada en lecciones existentes, con progreso local y desbloqueo. */
+const questOrder=[
+['tenses','overview'],['tenses','present'],['tenses','past'],['tenses','future'],
+['tenses','presentPerfect'],['tenses','pastPerfect']
+];
+function questLessons(){const t=lessons.tenses||[];const preferred=questOrder.map(([cat,id])=>({cat,l:(lessons[cat]||[]).find(x=>x.id===id)})).filter(x=>x.l);const ids=new Set(preferred.map(x=>x.l.id));t.forEach(l=>{if(!ids.has(l.id)){preferred.push({cat:'tenses',l});ids.add(l.id)}});return preferred}
+function studyDate(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
+function daysBetween(a,b){const x=new Date(a+'T12:00:00'),y=new Date(b+'T12:00:00');return Math.round((y-x)/86400000)}
+function awardPracticeXP(topic,points,total){
+student.xp=Number(student.xp||0)+(points*10)+(total===points?15:0);
+student.finished=student.finished||{};
+if(currentLesson&&currentLesson.id)student.finished[currentLesson.id]=true;
+const today=studyDate(),old=student.lastActive;
+if(old!==today){student.streak=old&&daysBetween(old,today)===1?Number(student.streak||0)+1:1;student.lastActive=today}
+saveProgressData();renderHomeProgress();
+}
+function renderQuests(){
+const path=$('learningPath');path.replaceChildren();
+const routes=questLessons(),finished=student.finished||{};
+routes.forEach(({cat,l},i)=>{
+const unlocked=i===0||Boolean(finished[routes[i-1].l.id]);const done=Boolean(finished[l.id]);
+const item=document.createElement('div');item.className='quest-step';
+const btn=document.createElement('button');btn.className='quest-node '+(done?'done':unlocked?'available':'locked');btn.textContent=done?'✓':unlocked?'★':'🔒';btn.disabled=!unlocked;btn.setAttribute('aria-label',(done?'Repetir':unlocked?'Empezar':'Bloqueado')+' '+l.title);btn.onclick=()=>{currentCategory=cat;openLesson(l)};
+const txt=document.createElement('div');txt.className='quest-label';const strong=document.createElement('strong');strong.textContent=l.title;const small=document.createElement('small');small.textContent=done?'Completado · Repetible':unlocked?'Toca para estudiar y practicar':'Completa la lección anterior';txt.append(strong,small);item.append(btn,txt);path.appendChild(item)
+});
+$('xpTop').textContent='⭐ '+Number(student.xp||0)+' XP';
+$('streakTop').textContent='🔥 '+Number(student.streak||0)+' días';
+$('levelTop').textContent='🏅 Nivel '+(1+Math.floor(Number(student.xp||0)/100));
+}
+
 function renderHomeProgress(){
 const total=blogArticles.length,done=Object.keys(student.read).length,percent=total?Math.round(done/total*100):0;
 $('homeGreeting').textContent=student.name?'¡Hola, '+student.name+'!':'Tu aprendizaje';
 $('homeProgressText').textContent=done+' de '+total+' artículos leídos · '+student.quizzes.length+' prácticas completadas';
-$('homeProgressBar').style.width=percent+'%';
+$('homeProgressBar').style.width=percent+'%';renderQuests();
 }
 function renderProfile(){$('studentName').value=student.name;$('readStat').textContent=Object.keys(student.read).length;$('quizStat').textContent=student.quizzes.length;$('accuracyStat').textContent=student.totalQuestions?Math.round(student.totalCorrect/student.totalQuestions*100)+'%':'0%';const pc=blogArticles.length?Math.round(Object.keys(student.read).length/blogArticles.length*100):0;$('readProgress').style.width=pc+'%';$('readProgressText').textContent=Object.keys(student.read).length+' de '+blogArticles.length+' artículos completados ('+pc+'%)';$('recentActivity').replaceChildren();const recent=student.quizzes.slice(-5).reverse();if(!recent.length)$('recentActivity').textContent='Todavía no has realizado prácticas.';recent.forEach(x=>{const p=document.createElement('p');p.textContent=x.date.slice(0,10)+' · '+x.topic+' · '+x.score+'/'+x.total;$('recentActivity').appendChild(p)})}
 $('navHome').onclick=()=>{show('home');window.scrollTo(0,0)};

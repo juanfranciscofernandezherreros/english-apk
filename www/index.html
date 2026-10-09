@@ -24,6 +24,8 @@ table{width:100%;border-collapse:collapse;margin:12px 0;background:#fff}th,td{bo
 /* Biblioteca y perfil */
 .library-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.library-toolbar input,.library-toolbar select,.profile-input{padding:13px;border-radius:12px;border:1px solid var(--line);background:white;font:inherit;min-width:0}.library-toolbar input{flex:1;min-width:160px}.library-toolbar select{max-width:150px}.library-article{background:white;border:1px solid var(--line);border-radius:15px;text-align:left;padding:15px;display:flex;gap:10px;justify-content:space-between;align-items:center}.library-article strong{display:block}.library-article small{color:var(--muted)}.library-article.completed{border-color:var(--ok);background:#eff8f2}.article-body{overflow-wrap:anywhere;line-height:1.75}.article-body img{max-width:100%;height:auto}.article-body .scroll{overflow:auto}.article-body table{font-size:14px}.article-body pre{overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#eaf3ec;padding:15px;border-radius:14px;text-align:center}.stat strong{display:block;color:var(--green);font-size:26px}.progress-meter{height:12px;overflow:hidden;border-radius:20px;background:#e1e6e2}.progress-meter>span{height:100%;display:block;background:var(--ok);transition:width .2s}.profile-input{width:100%;margin:8px 0}.profile-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}@media(max-width:400px){.stats{grid-template-columns:1fr 1fr}}
 
+/* Onboarding */
+.welcome-hero{margin:18px auto;max-width:610px;padding:30px 25px}.welcome-symbol{font-size:56px;margin:22px 0 10px}.welcome-hero h1{font-size:clamp(31px,6vw,44px)}.welcome-hero label{display:block;margin-top:26px}.welcome-button{width:100%;margin-top:12px;min-height:53px}.welcome-privacy{font-size:13px;color:var(--muted);text-align:center;margin-top:15px}.input-error{font-size:13px;color:var(--red);margin:5px 0}body.onboarding .bottom-nav{display:none}body.onboarding .app{padding-bottom:24px}body.onboarding .topbar .pill{display:none}
 /* Pulido visual móvil */
 :root{color-scheme:light}
 body{min-height:100vh}
@@ -48,6 +50,7 @@ button:disabled{cursor:default}
 <div class="app">
 <header class="topbar"><div class="brand"><img src="img/logo.svg" alt=""><span>Easy English</span></div><span class="pill">Teoría + práctica</span></header>
 
+<section id="welcome" class="hidden"><div class="hero welcome-hero"><div class="meta">Bienvenido a Easy English</div><div class="welcome-symbol">👋</div><h1>Primero, crea tu perfil.</h1><p class="muted">Tu espacio para aprender inglés a tu ritmo. Guardaremos las lecturas y ejercicios en este dispositivo, sin cuenta ni contraseña.</p><label for="welcomeName"><strong>¿Cómo te llamas?</strong></label><input id="welcomeName" class="profile-input" maxlength="50" autocomplete="given-name" placeholder="Tu nombre"><p id="welcomeError" class="input-error hidden" role="alert">Escribe tu nombre para continuar.</p><button class="primary welcome-button" id="createStudent">Crear mi perfil y empezar →</button><p class="welcome-privacy">🔒 Tus datos permanecen en este dispositivo.</p></div></section>
 <section id="home">
   <div class="hero">
     <div class="meta">Curso de inglés a medida</div>
@@ -231,8 +234,8 @@ speaking:['Speaking','Expresiones y estrategias para hablar con más naturalidad
 let currentCategory='tenses',currentLesson=null,quiz=[],qi=0,score=0,locked=false;
 const $=id=>document.getElementById(id);
 function show(id){
-['home','catalog','lessonView','library','articleView','profileView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));
-const nav=id==='home'?'navHome':id==='library'||id==='articleView'?'navLibrary':id==='profileView'?'navProfile':'navCourse';
+['welcome','home','catalog','lessonView','library','articleView','profileView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));
+const nav=id==='welcome'?'navProfile':id==='home'?'navHome':id==='library'||id==='articleView'?'navLibrary':id==='profileView'?'navProfile':'navCourse';
 ['navHome','navLibrary','navCourse','navProfile'].forEach(x=>{$(x).classList.toggle('active',x===nav);$(x).setAttribute('aria-current',x===nav?'page':'false')});
 if(id==='home'&&typeof renderHomeProgress==='function')renderHomeProgress();
 }
@@ -273,5 +276,10 @@ $('navProfile').onclick=()=>{renderProfile();show('profileView');window.scrollTo
 $('openLibrary').onclick=openLibrary;$('libraryBackHome').onclick=()=>show('home');$('articleBackLibrary').onclick=openLibrary;$('articleToLibrary').onclick=openLibrary;$('librarySearch').oninput=renderLibrary;$('libraryCategory').onchange=renderLibrary;$('markArticle').onclick=markRead;
 $('openProfile').onclick=()=>{renderProfile();show('profileView');window.scrollTo(0,0)};$('profileBackHome').onclick=()=>show('home');$('saveProfile').onclick=()=>{student.name=$('studentName').value.trim();saveProgressData();renderProfile()};$('resetProfile').onclick=()=>{if(confirm('¿Borrar tu progreso local y tu nombre?')){student={name:'',read:{},quizzes:[],totalCorrect:0,totalQuestions:0};saveProgressData();renderProfile()}};
 
+function finishWelcome(){const name=$('welcomeName').value.trim();if(!name){$('welcomeError').classList.remove('hidden');$('welcomeName').focus();return}student.name=name;saveProgressData();document.body.classList.remove('onboarding');show('home');window.scrollTo(0,0)}
+$('createStudent').onclick=finishWelcome;
+$('welcomeName').addEventListener('keydown',e=>{if(e.key==='Enter')finishWelcome()});
+if(!student.name||!student.name.trim()){document.body.classList.add('onboarding');show('welcome')}else{show('home')}
+renderHomeProgress();
 </script>
 </body></html>

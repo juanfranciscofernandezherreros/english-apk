@@ -23,6 +23,25 @@ table{width:100%;border-collapse:collapse;margin:12px 0;background:#fff}th,td{bo
 
 /* Biblioteca y perfil */
 .library-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.library-toolbar input,.library-toolbar select,.profile-input{padding:13px;border-radius:12px;border:1px solid var(--line);background:white;font:inherit;min-width:0}.library-toolbar input{flex:1;min-width:160px}.library-toolbar select{max-width:150px}.library-article{background:white;border:1px solid var(--line);border-radius:15px;text-align:left;padding:15px;display:flex;gap:10px;justify-content:space-between;align-items:center}.library-article strong{display:block}.library-article small{color:var(--muted)}.library-article.completed{border-color:var(--ok);background:#eff8f2}.article-body{overflow-wrap:anywhere;line-height:1.75}.article-body img{max-width:100%;height:auto}.article-body .scroll{overflow:auto}.article-body table{font-size:14px}.article-body pre{overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#eaf3ec;padding:15px;border-radius:14px;text-align:center}.stat strong{display:block;color:var(--green);font-size:26px}.progress-meter{height:12px;overflow:hidden;border-radius:20px;background:#e1e6e2}.progress-meter>span{height:100%;display:block;background:var(--ok);transition:width .2s}.profile-input{width:100%;margin:8px 0}.profile-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}@media(max-width:400px){.stats{grid-template-columns:1fr 1fr}}
+
+/* Pulido visual móvil */
+:root{color-scheme:light}
+body{min-height:100vh}
+.app{padding-bottom:calc(106px + env(safe-area-inset-bottom))}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+button:disabled{cursor:default}
+.topbar{position:sticky;top:0;z-index:15;background:rgba(247,245,239,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);margin:0 -16px 16px;padding:12px 16px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;justify-content:center;gap:4px;padding:10px max(14px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));background:rgba(255,255,255,.97);border-top:1px solid var(--line);box-shadow:0 -6px 28px #1f29331a}
+.bottom-nav button{flex:1;max-width:170px;padding:9px 4px;border:0;border-radius:13px;background:transparent;color:var(--muted);font-size:12px;font-weight:800;min-height:52px}
+.bottom-nav button.active{background:var(--soft);color:var(--green)}
+.bottom-nav button span{display:block;font-size:19px;line-height:24px}
+.home-progress{margin-top:16px;padding:15px;border-radius:15px;background:#eef6f1}
+.home-progress strong{color:var(--green)}
+.home-progress p{font-size:13px;margin:3px 0 10px;color:var(--muted)}
+.article-body details,.article-body blockquote{max-width:100%}
+.article-body iframe,.article-body video{max-width:100%}
+.article-body a{text-decoration:underline;color:var(--green);overflow-wrap:anywhere}
+@media(max-width:400px){.course-card{padding:15px}.topbar .pill{font-size:10px}.hero,.card{padding:18px 16px}}
 </style>
 </head>
 <body>
@@ -81,6 +100,12 @@ table{width:100%;border-collapse:collapse;margin:12px 0;background:#fff}th,td{bo
 </section>
 
 <div class="footer">Contenido educativo offline · Basado en Easy English</div>
+<nav class="bottom-nav" aria-label="Navegación principal">
+<button id="navHome" class="active"><span>⌂</span>Inicio</button>
+<button id="navLibrary"><span>▤</span>Artículos</button>
+<button id="navCourse"><span>▧</span>Curso</button>
+<button id="navProfile"><span>♙</span>Perfil</button>
+</nav>
 </div>
 <script src="cordova.js"></script>
 <script src="blog-data-1.js"></script>
@@ -205,10 +230,15 @@ speaking:['Speaking','Expresiones y estrategias para hablar con más naturalidad
 };
 let currentCategory='tenses',currentLesson=null,quiz=[],qi=0,score=0,locked=false;
 const $=id=>document.getElementById(id);
-function show(id){['home','catalog','lessonView','library','articleView','profileView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));}
+function show(id){
+['home','catalog','lessonView','library','articleView','profileView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));
+const nav=id==='home'?'navHome':id==='library'||id==='articleView'?'navLibrary':id==='profileView'?'navProfile':'navCourse';
+['navHome','navLibrary','navCourse','navProfile'].forEach(x=>{$(x).classList.toggle('active',x===nav);$(x).setAttribute('aria-current',x===nav?'page':'false')});
+if(id==='home'&&typeof renderHomeProgress==='function')renderHomeProgress();
+}
 function openCatalog(cat){currentCategory=cat;const [t,d]=catalogInfo[cat];$('catalogMeta').textContent='Contenido';$('catalogTitle').textContent=t;$('catalogText').textContent=d;$('lessonList').innerHTML='';lessons[cat].forEach(l=>{const b=document.createElement('button');b.className='lesson-btn';b.innerHTML='<strong>'+l.title+'</strong><small>'+l.level+' · '+l.lead+'</small>';b.onclick=()=>openLesson(l);$('lessonList').appendChild(b)});show('catalog')}
 function openLesson(l){currentLesson=l;$('lessonMeta').textContent=l.level;$('lessonTitle').textContent=l.title;$('lessonLead').textContent=l.lead;$('lessonBody').innerHTML=l.body;$('quizArea').classList.add('hidden');show('lessonView');window.scrollTo(0,0)}
-function startQuiz(ids){quiz=ids.map(id=>questions[id]);qi=0;score=0;locked=false;$('quizArea').classList.remove('hidden');renderQuiz();$('quizArea').scrollIntoView({behavior:'smooth'})}
+function startQuiz(ids){quiz=ids.map(id=>questions[id]).filter(Boolean);if(!quiz.length){alert('Este tema todavía no tiene ejercicios disponibles.');return;}qi=0;score=0;locked=false;$('quizArea').classList.remove('hidden');renderQuiz();$('quizArea').scrollIntoView({behavior:'smooth'})}
 function renderQuiz(){locked=false;const q=quiz[qi];$('quizPos').textContent='Pregunta '+(qi+1)+' de '+quiz.length;$('quizScore').textContent='Aciertos: '+score;$('quizQuestion').textContent=q.q;$('quizContext').textContent=q.c||'Elige la mejor respuesta.';$('quizAnswers').innerHTML='';$('quizExplain').classList.add('hidden');$('nextQuiz').classList.add('hidden');q.a.forEach((a,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>answer(i,b);$('quizAnswers').appendChild(b)})}
 function answer(i,b){if(locked)return;locked=true;const q=quiz[qi];document.querySelectorAll('.answer').forEach((x,j)=>{if(j===q.r)x.classList.add('correct');else if(j===i)x.classList.add('wrong');x.disabled=true});if(i===q.r)score++;$('quizScore').textContent='Aciertos: '+score;$('quizExplain').innerHTML='<strong>'+(i===q.r?'Correcto.':'Respuesta correcta: '+q.a[q.r])+'</strong><br>'+q.e;$('quizExplain').classList.remove('hidden');$('nextQuiz').textContent=qi===quiz.length-1?'Ver resultado':'Siguiente →';$('nextQuiz').classList.remove('hidden')}
 $('nextQuiz').onclick=()=>{if(qi<quiz.length-1){qi++;renderQuiz()}else{student.quizzes.push({date:new Date().toISOString(),topic:currentLesson?currentLesson.title:'Tense Trainer',score:score,total:quiz.length});student.totalCorrect+=score;student.totalQuestions+=quiz.length;saveProgressData();$('quizQuestion').textContent='Resultado: '+score+' / '+quiz.length;$('quizContext').textContent=score===quiz.length?'Excelente. Puedes repetir el tema o pasar al siguiente.':'Revisa las explicaciones del tema y vuelve a intentarlo.';$('quizAnswers').innerHTML='';$('quizExplain').classList.add('hidden');$('nextQuiz').classList.add('hidden')}};
@@ -227,9 +257,19 @@ const safeText=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'
 let selectedArticle=null;
 function renderLibrary(){const q=$('librarySearch').value.toLocaleLowerCase().trim(),cat=$('libraryCategory').value;const filtered=blogArticles.filter(a=>(cat==='all'||a.category===cat)&&a.title.toLocaleLowerCase().includes(q));$('libraryList').replaceChildren();filtered.forEach(a=>{const b=document.createElement('button');b.className='library-article'+(student.read[a.url]?' completed':'');const label=document.createElement('span');label.innerHTML='<strong>'+safeText(a.title)+'</strong><small>'+safeText(a.category)+' · '+safeText(a.date)+(student.read[a.url]?' · ✓ Leído':'')+'</small>';const arrow=document.createElement('span');arrow.textContent='›';b.append(label,arrow);b.onclick=()=>openArticle(a);$('libraryList').appendChild(b)});$('libraryCount').textContent=filtered.length+' artículos · '+blogArticles.length+' en la biblioteca'}
 function openLibrary(){renderLibrary();show('library');window.scrollTo(0,0)}
-function openArticle(a){selectedArticle=a;$('articleMeta').textContent=a.category+' · '+a.date;$('articleTitle').textContent=a.title;$('articleBody').innerHTML=a.html;for(const link of $('articleBody').querySelectorAll('a[href]')){const href=link.getAttribute('href')||'';if(/^(javascript|data):/i.test(href)){link.removeAttribute('href');continue}const slug=href.split('/').pop();const dest=blogArticles.find(x=>x.url.endsWith('/'+slug));if(dest){link.removeAttribute('href');link.onclick=()=>{openArticle(dest);return false}}else if(/^https?:/i.test(href)){link.setAttribute('target','_blank')}}$('markArticle').textContent=student.read[a.url]?'✓ Leído · Desmarcar':'Marcar como leído ✓';show('articleView');window.scrollTo(0,0)}
+function openArticle(a){selectedArticle=a;$('articleMeta').textContent=a.category+' · '+a.date;$('articleTitle').textContent=a.title;$('articleBody').innerHTML=a.html;for(const link of $('articleBody').querySelectorAll('a[href]')){const href=link.getAttribute('href')||'';if(/^(javascript|data):/i.test(href)){link.removeAttribute('href');continue}const slug=href.split('#')[0].split('?')[0].split('/').pop();const dest=blogArticles.find(x=>x.url.endsWith('/'+slug));if(dest){link.removeAttribute('href');link.onclick=()=>{openArticle(dest);return false}}else if(/^https?:/i.test(href)){link.setAttribute('target','_blank');link.setAttribute('rel','noopener noreferrer')}else if(href.startsWith('#')){}else if(href.toLowerCase().endsWith('.pdf')){link.href='https://jnfz92.github.io/'+href.replace(/^\.\.\//,'')}else{link.removeAttribute('href');link.title='Enlace disponible en la versión web del blog'}}$('markArticle').textContent=student.read[a.url]?'✓ Leído · Desmarcar':'Marcar como leído ✓';show('articleView');window.scrollTo(0,0)}
 function markRead(){if(!selectedArticle)return;if(student.read[selectedArticle.url])delete student.read[selectedArticle.url];else student.read[selectedArticle.url]=new Date().toISOString();saveProgressData();openArticle(selectedArticle)}
+function renderHomeProgress(){
+const total=blogArticles.length,done=Object.keys(student.read).length,percent=total?Math.round(done/total*100):0;
+$('homeGreeting').textContent=student.name?'¡Hola, '+student.name+'!':'Tu aprendizaje';
+$('homeProgressText').textContent=done+' de '+total+' artículos leídos · '+student.quizzes.length+' prácticas completadas';
+$('homeProgressBar').style.width=percent+'%';
+}
 function renderProfile(){$('studentName').value=student.name;$('readStat').textContent=Object.keys(student.read).length;$('quizStat').textContent=student.quizzes.length;$('accuracyStat').textContent=student.totalQuestions?Math.round(student.totalCorrect/student.totalQuestions*100)+'%':'0%';const pc=blogArticles.length?Math.round(Object.keys(student.read).length/blogArticles.length*100):0;$('readProgress').style.width=pc+'%';$('readProgressText').textContent=Object.keys(student.read).length+' de '+blogArticles.length+' artículos completados ('+pc+'%)';$('recentActivity').replaceChildren();const recent=student.quizzes.slice(-5).reverse();if(!recent.length)$('recentActivity').textContent='Todavía no has realizado prácticas.';recent.forEach(x=>{const p=document.createElement('p');p.textContent=x.date.slice(0,10)+' · '+x.topic+' · '+x.score+'/'+x.total;$('recentActivity').appendChild(p)})}
+$('navHome').onclick=()=>{show('home');window.scrollTo(0,0)};
+$('navLibrary').onclick=openLibrary;
+$('navCourse').onclick=()=>openCatalog('tenses');
+$('navProfile').onclick=()=>{renderProfile();show('profileView');window.scrollTo(0,0)};
 $('openLibrary').onclick=openLibrary;$('libraryBackHome').onclick=()=>show('home');$('articleBackLibrary').onclick=openLibrary;$('articleToLibrary').onclick=openLibrary;$('librarySearch').oninput=renderLibrary;$('libraryCategory').onchange=renderLibrary;$('markArticle').onclick=markRead;
 $('openProfile').onclick=()=>{renderProfile();show('profileView');window.scrollTo(0,0)};$('profileBackHome').onclick=()=>show('home');$('saveProfile').onclick=()=>{student.name=$('studentName').value.trim();saveProgressData();renderProfile()};$('resetProfile').onclick=()=>{if(confirm('¿Borrar tu progreso local y tu nombre?')){student={name:'',read:{},quizzes:[],totalCorrect:0,totalQuestions:0};saveProgressData();renderProfile()}};
 

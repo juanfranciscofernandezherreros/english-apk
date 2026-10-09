@@ -34,7 +34,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 button:disabled{cursor:default}
 .topbar{position:sticky;top:0;z-index:15;background:rgba(247,245,239,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);margin:0 -16px 16px;padding:12px 16px}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;justify-content:center;gap:4px;padding:10px max(14px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));background:rgba(255,255,255,.97);border-top:1px solid var(--line);box-shadow:0 -6px 28px #1f29331a}
-.bottom-nav button{flex:1;max-width:170px;padding:9px 4px;border:0;border-radius:13px;background:transparent;color:var(--muted);font-size:12px;font-weight:800;min-height:52px}
+.bottom-nav button{flex:1;min-width:0;max-width:170px;padding:9px 3px;border:0;border-radius:13px;background:transparent;color:var(--muted);font-size:12px;font-weight:800;min-height:52px}
 .bottom-nav button.active{background:var(--soft);color:var(--green)}
 .bottom-nav button span{display:block;font-size:19px;line-height:24px}
 .home-progress{margin-top:16px;padding:15px;border-radius:15px;background:#eef6f1}
@@ -85,6 +85,7 @@ body{background:var(--bg)}.topbar{background:#f5f8f4ed}
 #home .course-card strong{font-size:17px}
 #home .course-card .meta{letter-spacing:.035em}
 @media(max-width:560px){#home .hero{padding:25px 20px}#home .hero h1{font-size:33px}.home-hero-actions{flex-direction:column}.home-main-btn,.home-outline-btn{width:100%;min-height:48px}.quest-banner{padding:16px}.quest-stats span{flex:1;text-align:center;font-size:12px}.quest-step:nth-child(even){padding-left:18px}#home .course-card{min-height:auto}}
+#examList{margin-top:18px}.lesson-btn[data-exam]{cursor:pointer}.lesson-btn:hover{border-color:var(--green);background:#f2f9f4}#pdfView .lesson-btn{display:block;text-decoration:none;color:var(--ink)}.bottom-nav button{font-size:11px}@media(max-width:380px){.bottom-nav button{font-size:10px}.bottom-nav button span{font-size:17px}}
 </style>
 </head>
 <body>
@@ -114,6 +115,8 @@ body{background:var(--bg)}.topbar{background:#f5f8f4ed}
   </div>
   <h2 class="quick-grid-title">Más formas de aprender</h2>
   <div class="grid">
+    <button class="course-card" id="openExams"><div class="meta">PRÁCTICA OFFLINE</div><strong>📝 Exámenes por niveles</strong><span>Prueba lo que sabes y guarda tus resultados.</span></button>
+    <button class="course-card" id="openPDF"><div class="meta">APUNTES PARA LLEVAR</div><strong>📥 Descargar PDF</strong><span>Recopilaciones del blog para guardar en el móvil.</span></button>
     <button class="course-card" id="openLibrary"><div class="meta">BIBLIOTECA OFFLINE</div><strong>📚 Todos los artículos</strong><span>Lee y repasa las 46 entradas del blog.</span></button>
     <button class="course-card" id="openProfile"><div class="meta">MI ESPACIO</div><strong>👤 Perfil y progreso</strong><span>Tus logros, lecturas y ejercicios completados.</span></button>
     <button class="course-card featured" data-open="tenses"><div class="meta" style="color:#dfece7">CURSO PRINCIPAL</div><strong>🧩 Tiempos verbales</strong><span>Presente, pasado, futuro y comparaciones.</span></button>
@@ -124,6 +127,13 @@ body{background:var(--bg)}.topbar{background:#f5f8f4ed}
 </section>
 
 
+<section id="examsView" class="hidden"><button class="back" id="examsBack">← Inicio</button><div class="card"><div class="meta">Practica sin conexión</div><h1>📝 Exámenes de inglés</h1><p class="muted">Elige un examen, responde las preguntas y recibe una explicación de cada respuesta. Tus resultados se guardan en el perfil.</p><div class="lesson-list" id="examList"><button class="lesson-btn" data-exam="basic"><strong>🌱 Nivel inicial · A1–A2</strong><small>10 preguntas · fundamentos de inglés</small></button><button class="lesson-btn" data-exam="intermediate"><strong>🎯 Nivel intermedio · B1</strong><small>12 preguntas · gramática y vocabulario</small></button><button class="lesson-btn" data-exam="advanced"><strong>🏆 Reto B1–B2</strong><small>14 preguntas · repaso mixto</small></button></div></div></section>
+<section id="pdfView" class="hidden"><button class="back" id="pdfBack">← Inicio</button><div class="card"><div class="meta">Material para estudiar</div><h1>📥 Descargar PDF</h1><p class="muted">Los artículos de la biblioteca funcionan offline. Para descargar estos archivos desde GitHub Pages, necesitarás conexión a internet.</p><div class="lesson-list">
+<a class="lesson-btn" href="https://jnfz92.github.io/pdfs/easy_english_articulos_09-10-2026.pdf" target="_system"><strong>📄 Artículos · 9 de octubre</strong><small>7 artículos de gramática, vocabulario y ejercicios · Descargar ↗</small></a>
+<a class="lesson-btn" href="https://jnfz92.github.io/pdfs/easy_english_articulos_08-10-2026.pdf" target="_system"><strong>📄 Artículos · 8 de octubre</strong><small>50 verbos irregulares · Descargar ↗</small></a>
+<a class="lesson-btn" href="https://jnfz92.github.io/pdfs/easy_english_articulos_07-10-2026.pdf" target="_system"><strong>📄 Artículos · 7 de octubre</strong><small>Presente, pasado, futuro y vocabulario · Descargar ↗</small></a>
+<a class="lesson-btn" href="https://jnfz92.github.io/downloads.html" target="_system"><strong>📚 Todas las descargas</strong><small>Consultar el catálogo completo del blog ↗</small></a>
+</div></div></section>
 <section id="library" class="hidden">
 <button class="back" id="libraryBackHome">← Inicio</button>
 <div class="card"><div class="meta">Biblioteca Easy English · Offline</div><h1>Todos los artículos del blog</h1><p class="muted">Busca, lee y marca lo estudiado. El progreso se guarda en este dispositivo.</p>
@@ -163,6 +173,7 @@ body{background:var(--bg)}.topbar{background:#f5f8f4ed}
 <button id="navHome" class="active"><span>⌂</span>Inicio</button>
 <button id="navLibrary"><span>▤</span>Artículos</button>
 <button id="navCourse"><span>▧</span>Curso</button>
+<button id="navExams"><span>✎</span>Exámenes</button>
 <button id="navProfile"><span>♙</span>Perfil</button>
 </nav>
 </div>
@@ -290,9 +301,9 @@ speaking:['Speaking','Expresiones y estrategias para hablar con más naturalidad
 let currentCategory='tenses',currentLesson=null,quiz=[],qi=0,score=0,locked=false;
 const $=id=>document.getElementById(id);
 function show(id){
-['welcome','home','catalog','lessonView','library','articleView','profileView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));
-const nav=id==='welcome'?'navProfile':id==='home'?'navHome':id==='library'||id==='articleView'?'navLibrary':id==='profileView'?'navProfile':'navCourse';
-['navHome','navLibrary','navCourse','navProfile'].forEach(x=>{$(x).classList.toggle('active',x===nav);$(x).setAttribute('aria-current',x===nav?'page':'false')});
+['welcome','home','catalog','lessonView','library','articleView','profileView','examsView','pdfView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));
+const nav=id==='welcome'?'navProfile':id==='home'?'navHome':id==='library'||id==='articleView'?'navLibrary':id==='profileView'?'navProfile':id==='examsView'?'navExams':id==='pdfView'?'navHome':'navCourse';
+['navHome','navLibrary','navCourse','navExams','navProfile'].forEach(x=>{$(x).classList.toggle('active',x===nav);$(x).setAttribute('aria-current',x===nav?'page':'false')});
 if(id==='home'&&typeof renderHomeProgress==='function')renderHomeProgress();
 }
 function openCatalog(cat){currentCategory=cat;const [t,d]=catalogInfo[cat];$('catalogMeta').textContent='Contenido';$('catalogTitle').textContent=t;$('catalogText').textContent=d;$('lessonList').innerHTML='';lessons[cat].forEach(l=>{const b=document.createElement('button');b.className='lesson-btn';b.innerHTML='<strong>'+l.title+'</strong><small>'+l.level+' · '+l.lead+'</small>';b.onclick=()=>openLesson(l);$('lessonList').appendChild(b)});show('catalog')}
@@ -365,6 +376,31 @@ $('navCourse').onclick=()=>openCatalog('tenses');
 $('navProfile').onclick=()=>{renderProfile();show('profileView');window.scrollTo(0,0)};
 $('openLibrary').onclick=openLibrary;$('libraryBackHome').onclick=()=>show('home');$('articleBackLibrary').onclick=openLibrary;$('articleToLibrary').onclick=openLibrary;$('librarySearch').oninput=renderLibrary;$('libraryCategory').onchange=renderLibrary;$('markArticle').onclick=markRead;
 $('openProfile').onclick=()=>{renderProfile();show('profileView');window.scrollTo(0,0)};$('profileBackHome').onclick=()=>show('home');$('saveProfile').onclick=()=>{student.name=$('studentName').value.trim();saveProgressData();renderProfile()};$('resetProfile').onclick=()=>{if(confirm('¿Borrar tu progreso local y tu nombre?')){student={name:'',read:{},quizzes:[],totalCorrect:0,totalQuestions:0};saveProgressData();renderProfile()}};
+
+
+/* Exámenes nativos offline, con el motor de corrección existente */
+const examSets={
+basic:['q1','q2','q4','q5','q6','q7','q8','q9','q10','q11'],
+intermediate:['q12','q13','q14','q15','q16','q17','q18','q19','q20','q21','q22','q23'],
+advanced:['q1','q3','q5','q8','q12','q14','q17','q20','q24','q25','q27','q30','q33','q36']
+};
+const examTitles={basic:'Examen A1–A2',intermediate:'Examen B1',advanced:'Examen B1–B2'};
+function openExams(){show('examsView');window.scrollTo(0,0)}
+function openPDFs(){show('pdfView');window.scrollTo(0,0)}
+function beginExam(key){
+const ids=(examSets[key]||[]).filter(id=>questions[id]);
+if(!ids.length)return;
+currentCategory='tenses';
+openLesson({id:'exam-'+key,title:examTitles[key],level:'Examen offline',lead:'Responde y descubre por qué cada opción es correcta.',body:'<div class="note">Este examen se corrige pregunta por pregunta. Se guarda el resultado al finalizar.</div>',quiz:ids});
+$('practiceBtn').textContent='Repetir examen';
+startQuiz(ids);
+}
+$('navExams').onclick=openExams;
+$('openExams').onclick=openExams;
+$('openPDF').onclick=openPDFs;
+$('examsBack').onclick=()=>show('home');
+$('pdfBack').onclick=()=>show('home');
+$('examList').querySelectorAll('[data-exam]').forEach(b=>b.onclick=()=>beginExam(b.dataset.exam));
 
 function finishWelcome(){
 const name=$('welcomeName').value.trim();

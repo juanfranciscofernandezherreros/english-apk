@@ -53,6 +53,38 @@ button:disabled{cursor:default}
 .quest-node.available{border-color:#63b28e;background:#dff8e7}.quest-node.done{border-color:#257451;background:#338461;color:white}.quest-node.locked{opacity:.55}
 .quest-label{font-size:14px}.quest-label strong{display:block;font-size:16px}.quest-label small{color:var(--muted)}
 @media(max-width:480px){.quest-step:nth-child(even){padding-left:22px}.quest-node{width:60px;height:60px}}
+
+/* Inicio rediseñado: verde salvia, tarjetas suaves y recorrido visual */
+:root{--bg:#f5f8f4;--green:#17644e;--soft:#e2f1e8;--gold:#f4bb62}
+body{background:var(--bg)}.topbar{background:#f5f8f4ed}
+#home .hero{background:linear-gradient(145deg,#0e5946 0%,#258469 100%);border:none;color:white;position:relative;overflow:hidden;padding:28px 24px 25px;box-shadow:0 18px 40px #17644e27}
+#home .hero:after{content:"✦";position:absolute;right:-15px;top:-28px;color:#ffffff16;font-size:174px;pointer-events:none}
+#home .hero .meta{color:#bcf3d5}#home .hero h1{font-family:Inter,system-ui,sans-serif;letter-spacing:-.045em;font-size:clamp(31px,6vw,42px);max-width:530px;line-height:1.12}
+#home .hero .muted{color:#e5f5ed;font-size:15px;max-width:510px}
+.home-eyebrow{font-size:13px;font-weight:800;color:#c9f6dd}
+.home-hero-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+.home-main-btn,.home-outline-btn{border-radius:13px;padding:13px 18px;font-weight:900;font-size:14px;border:0}
+.home-main-btn{background:#ffcf80;color:#233d31}.home-outline-btn{background:#ffffff25;border:1px solid #ffffff5b;color:white}
+.home-main-btn:hover{background:#ffe0a9}.home-outline-btn:hover{background:#ffffff35}
+.home-progress{margin:15px 0 20px;border:1px solid #cbe3d5;background:white;box-shadow:0 8px 24px #14291c0c}
+.home-progress strong{font-size:17px}
+.quest-banner{background:white;color:var(--ink);border:1px solid var(--line);box-shadow:0 10px 25px #152a1d0c;padding:18px 20px;margin:0 0 20px}
+.quest-banner h2{font-size:20px;margin:3px 0 8px}.quest-banner p{color:var(--muted);font-size:14px;margin:0}
+.quest-banner .meta{color:var(--green)!important}
+.quest-stats{gap:8px;margin-top:12px}.quest-stats span{background:#e9f5ee;border:1px solid #d0eadb;color:#17644e;border-radius:12px;padding:9px 12px}
+.path-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 10px}
+.path-heading h2{font:900 24px/1.2 Inter,system-ui,sans-serif;margin:4px 0}
+.path-heading p{color:var(--muted);font-size:13px;margin:0}
+#learningPath{background:white;border:1px solid var(--line);border-radius:24px;padding:16px 20px 22px;max-width:none}
+.quest-step{padding:6px 0;margin:9px 0}.quest-step:nth-child(even){padding-left:38px}
+.quest-node{width:62px;height:62px;border:4px solid #d1e7d8;box-shadow:0 5px 0 #c3dacb}
+.quest-label strong{font-size:15px}.quest-label small{display:block;line-height:1.35;margin-top:3px}
+.quick-grid-title{font:900 23px/1.25 Inter,system-ui,sans-serif;margin:26px 0 13px}
+#home .course-card{min-height:148px;border-radius:18px;box-shadow:0 5px 20px #2136290b;transition:transform .17s}
+#home .course-card:hover{transform:translateY(-2px)}
+#home .course-card strong{font-size:17px}
+#home .course-card .meta{letter-spacing:.035em}
+@media(max-width:560px){#home .hero{padding:25px 20px}#home .hero h1{font-size:33px}.home-hero-actions{flex-direction:column}.home-main-btn,.home-outline-btn{width:100%;min-height:48px}.quest-banner{padding:16px}.quest-stats span{flex:1;text-align:center;font-size:12px}.quest-step:nth-child(even){padding-left:18px}#home .course-card{min-height:auto}}
 </style>
 </head>
 <body>
@@ -62,18 +94,32 @@ button:disabled{cursor:default}
 <section id="welcome" class="hidden"><div class="hero welcome-hero"><div class="meta">Bienvenido a Easy English</div><div class="welcome-symbol">👋</div><h1>Primero, crea tu perfil.</h1><p class="muted">Tu espacio para aprender inglés a tu ritmo. Guardaremos las lecturas y ejercicios en este dispositivo, sin cuenta ni contraseña.</p><label for="welcomeName"><strong>¿Cómo te llamas?</strong></label><input id="welcomeName" class="profile-input" maxlength="50" autocomplete="given-name" placeholder="Tu nombre"><p id="welcomeError" class="input-error hidden" role="alert">Escribe tu nombre para continuar.</p><button class="primary welcome-button" id="createStudent">Crear mi perfil y empezar →</button><p class="welcome-privacy">🔒 Tus datos permanecen en este dispositivo.</p></div></section>
 <section id="home">
   <div class="hero">
-    <div class="meta">Curso de inglés a medida</div>
-    <h1>Aprende la regla, entiende el ejemplo y practica.</h1>
-    <p class="muted">Una app educativa offline centrada especialmente en los tiempos verbales, con explicaciones en español, ejemplos bilingües, errores frecuentes y ejercicios razonados.</p>
+    <div class="home-eyebrow">✦ EASY ENGLISH · TU ESPACIO DE ESTUDIO</div>
+    <h1>Un poquito de inglés cada día. <span style="color:#ffdc9b">Mucho progreso.</span></h1>
+    <p class="muted">Aprende a tu ritmo con lecciones cortas, práctica guiada y todo el contenido disponible sin conexión.</p>
+    <div class="home-hero-actions">
+      <button id="continueLearning" class="home-main-btn">▶ Continuar aprendiendo</button>
+      <button id="browseLibrary" class="home-outline-btn">Explorar 46 artículos ↗</button>
+    </div>
   </div>
-  <div class="quest-banner"><div class="meta" style="color:#c8f1d9">Tu aventura en inglés · Offline</div><h2>Aprende un poco cada día</h2><p>Completa las lecciones, consigue XP y desbloquea nuevos temas. Todo funciona sin conexión.</p><div class="quest-stats"><span id="xpTop">⭐ 0 XP</span><span id="streakTop">🔥 0 días</span><span id="levelTop">🏅 Nivel 1</span></div></div><div class="section"><div class="meta">Tu camino de aprendizaje</div><h2>Ruta por niveles</h2><div id="learningPath" class="quest-track"></div></div>
+  <div class="home-progress"><strong id="homeGreeting">Tu aprendizaje</strong><p id="homeProgressText">Avanza a tu ritmo.</p><div class="progress-meter"><span id="homeProgressBar" style="width:0%"></span></div></div>
+  <div class="quest-banner">
+    <div class="meta">✦ TUS LOGROS</div><h2>¡Cada paso cuenta!</h2>
+    <p>Gana experiencia con tus respuestas y mantén tu racha de estudio.</p>
+    <div class="quest-stats"><span id="xpTop">⭐ 0 XP</span><span id="streakTop">🔥 0 días</span><span id="levelTop">🏅 Nivel 1</span></div>
+  </div>
+  <div class="section">
+    <div class="path-heading"><div><div class="meta">APRENDE PASO A PASO</div><h2>Tu ruta de aprendizaje</h2><p>Completa una lección para desbloquear la siguiente.</p></div></div>
+    <div id="learningPath" class="quest-track"></div>
+  </div>
+  <h2 class="quick-grid-title">Más formas de aprender</h2>
   <div class="grid">
-    <button class="course-card" id="openLibrary"><div class="meta">Biblioteca del blog</div><strong>📚 Todos los artículos</strong><span>Consulta el blog completo dentro de la app, incluso sin conexión.</span></button>
-    <button class="course-card" id="openProfile"><div class="meta">Seguimiento</div><strong>👤 Mi perfil y progreso</strong><span>Lecturas completadas, prácticas y porcentaje de aciertos.</span></button>
-    <button class="course-card featured" data-open="tenses"><div class="meta" style="color:#dfece7">Curso principal</div><strong>Tiempos verbales</strong><span>Presente, pasado, futuro, perfectos y comparaciones.</span></button>
-    <button class="course-card" data-open="grammar"><div class="meta">Gramática</div><strong>Gramática esencial</strong><span>Modales, condicionales, pasiva, gerundio e infinitivo y más.</span></button>
-    <button class="course-card" data-open="vocab"><div class="meta">Vocabulario</div><strong>Vocabulario útil</strong><span>Phrasal verbs, medio ambiente, política y expresiones.</span></button>
-    <button class="course-card" data-open="speaking"><div class="meta">Speaking</div><strong>Hablar con naturalidad</strong><span>Opinión, desacuerdo educado, marcadores y estrategias.</span></button>
+    <button class="course-card" id="openLibrary"><div class="meta">BIBLIOTECA OFFLINE</div><strong>📚 Todos los artículos</strong><span>Lee y repasa las 46 entradas del blog.</span></button>
+    <button class="course-card" id="openProfile"><div class="meta">MI ESPACIO</div><strong>👤 Perfil y progreso</strong><span>Tus logros, lecturas y ejercicios completados.</span></button>
+    <button class="course-card featured" data-open="tenses"><div class="meta" style="color:#dfece7">CURSO PRINCIPAL</div><strong>🧩 Tiempos verbales</strong><span>Presente, pasado, futuro y comparaciones.</span></button>
+    <button class="course-card" data-open="grammar"><div class="meta">GRAMÁTICA</div><strong>✍ Gramática esencial</strong><span>Modales, condicionales y otras estructuras.</span></button>
+    <button class="course-card" data-open="vocab"><div class="meta">VOCABULARIO</div><strong>💬 Palabras y expresiones</strong><span>Phrasal verbs, inglés real y vocabulario útil.</span></button>
+    <button class="course-card" data-open="speaking"><div class="meta">SPEAKING</div><strong>🎤 Habla con confianza</strong><span>Opiniones y estrategias para expresarte mejor.</span></button>
   </div>
 </section>
 
@@ -303,6 +349,9 @@ $('streakTop').textContent='🔥 '+Number(student.streak||0)+' días';
 $('levelTop').textContent='🏅 Nivel '+(1+Math.floor(Number(student.xp||0)/100));
 }
 
+function continueLearning(){const route=questLessons();const done=student.finished||{};const next=route.find((x,i)=>i===0||done[route[i-1].l.id]&&!done[x.l.id])||route[0];if(next){currentCategory=next.cat;openLesson(next.l)}else openCatalog('tenses')}
+$('continueLearning').onclick=continueLearning;
+$('browseLibrary').onclick=openLibrary;
 function renderHomeProgress(){
 const total=blogArticles.length,done=Object.keys(student.read).length,percent=total?Math.round(done/total*100):0;
 $('homeGreeting').textContent=student.name?'¡Hola, '+student.name+'!':'Tu aprendizaje';

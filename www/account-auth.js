@@ -1,0 +1,21 @@
+(function(){
+"use strict";
+const URL_BASE="https://wnluofonzteaqtlfshgy.supabase.co";
+const KEY="sb_publishable_Ef-AXAapcwaPExEFS6kmug_tKLaulM8";
+const STORAGE="easyenglish.auth.v1";
+const get=id=>document.getElementById(id);
+let session=null;
+const card=document.createElement("section");card.className="card";card.style.margin="18px 0";
+card.innerHTML='<h2>Mi cuenta Easy English</h2><p id="authState" class="muted" role="status">Usa el mismo correo y contraseña que en la web.</p><form id="accountForm"><label for="accountEmail">Correo electrónico</label><input class="profile-input" id="accountEmail" type="email" autocomplete="email" required><label for="accountPassword">Contraseña</label><input class="profile-input" id="accountPassword" type="password" autocomplete="current-password" minlength="6" required><div class="profile-actions"><button class="primary" type="submit">Iniciar sesión</button><button class="secondary" id="accountSignup" type="button">Crear cuenta</button></div></form><button class="secondary hidden" type="button" id="accountLogout">Cerrar sesión de la cuenta</button><p class="muted">El inicio de sesión requiere internet. Tus lecciones offline siguen disponibles.</p>';
+const profile=get("profileView");profile.insertBefore(card,profile.querySelector(".card"));
+const welcomeButton=document.createElement("button");welcomeButton.className="secondary welcome-button";welcomeButton.textContent="Ya tengo cuenta · Iniciar sesión";welcomeButton.type="button";get("createStudent").insertAdjacentElement("afterend",welcomeButton);
+welcomeButton.onclick=()=>{renderProfile();show("profileView");get("accountEmail").focus()};
+function status(s){get("authState").textContent=s}
+function view(){const ok=!!session?.access_token;get("accountForm").classList.toggle("hidden",ok);get("accountLogout").classList.toggle("hidden",!ok);status(ok?"Sesión iniciada: "+(session.user?.email||"usuario"):"Usa la misma cuenta que en la web.")}
+function save(s){session=s;try{if(s)localStorage.setItem(STORAGE,JSON.stringify(s));else localStorage.removeItem(STORAGE)}catch(e){}view()}
+async function request(path,body,token){const res=await fetch(URL_BASE+path,{method:"POST",headers:{"apikey":KEY,"Content-Type":"application/json",...(token?{"Authorization":"Bearer "+token}:{})},body:JSON.stringify(body)});const data=await res.json().catch(()=>({}));if(!res.ok)throw Error(data.msg||data.error_description||data.message||data.error||"Error de autenticación");return data}
+get("accountForm").onsubmit=async e=>{e.preventDefault();const btn=get("accountForm").querySelector("button[type=submit]");btn.disabled=true;try{const s=await request("/auth/v1/token?grant_type=password",{email:get("accountEmail").value.trim(),password:get("accountPassword").value});if(!s.access_token)throw Error("No se recibió una sesión");save(s);get("accountPassword").value=""}catch(e){status("No se pudo iniciar sesión: "+e.message)}finally{btn.disabled=false}};
+get("accountSignup").onclick=async()=>{const btn=get("accountSignup");btn.disabled=true;try{const s=await request("/auth/v1/signup",{email:get("accountEmail").value.trim(),password:get("accountPassword").value});get("accountPassword").value="";if(s.access_token)save(s);else status("Registro solicitado. Revisa tu correo si se requiere confirmación.")}catch(e){status("No se pudo registrar: "+e.message)}finally{btn.disabled=false}};
+get("accountLogout").onclick=async()=>{const old=session;save(null);if(old?.access_token)try{await request("/auth/v1/logout",{},old.access_token)}catch(e){}};
+(async()=>{let old=null;try{old=JSON.parse(localStorage.getItem(STORAGE)||"null")}catch(e){}if(!old?.refresh_token)return view();try{const s=await request("/auth/v1/token?grant_type=refresh_token",{refresh_token:old.refresh_token});save(s)}catch(e){if(navigator.onLine){save(null);status("Sesión caducada. Inicia sesión de nuevo.")}else status("Sin conexión. El contenido offline sigue disponible.")}})();
+})();

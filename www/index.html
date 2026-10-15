@@ -234,6 +234,7 @@ body.onboarding .welcome-hero h1{color:#193a2a}
 <script src="blog-data-3.js"></script>
 <script src="blog-data-4.js"></script>
 <script src="blog-data-5.js"></script>
+<script src="learning-path.js"></script>
 <script>
 const lessons={
 tenses:[
@@ -411,7 +412,7 @@ $('streakTop').textContent='🔥 '+Number(student.streak||0)+' días';
 $('levelTop').textContent='🏅 Nivel '+(1+Math.floor(Number(student.xp||0)/100));
 }
 
-function continueLearning(){const route=questLessons();const done=student.finished||{};const next=route.find((x,i)=>i===0||done[route[i-1].l.id]&&!done[x.l.id])||route[0];if(next){currentCategory=next.cat;openLesson(next.l)}else openCatalog('tenses')}
+function continueLearning(){const route=questLessons();const done=student.finished||{};const next=window.EasyEnglishLearningPath.nextUnlockedLesson(route,done);if(next){currentCategory=next.cat;openLesson(next.l)}else openCatalog('tenses')}
 $('continueLearning').onclick=continueLearning;
 $('browseLibrary').onclick=openLibrary;
 function renderHomeProgress(){

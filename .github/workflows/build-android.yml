@@ -3,6 +3,8 @@ name: Build EnglishAPK
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -30,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Test learning path navigation
+        run: npm run test:learning-path
+
       - name: Test real Supabase Auth
         run: node scripts/test-auth.mjs
 
@@ -50,6 +55,7 @@ jobs:
           if-no-files-found: error
 
       - name: Publish downloadable APK in GitHub Releases
+        if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

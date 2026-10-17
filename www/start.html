@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src https://jnfz92.github.io">
+  <title>Easy English · Conectar</title>
+  <style>
+    :root{color-scheme:light;--green:#176447;--ink:#193a2a;--muted:#536d60;--bg:#f5f7f2}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:var(--bg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);display:grid;place-items:center}
+    main{width:min(100% - 32px,430px);padding:34px 24px;padding-top:max(34px,env(safe-area-inset-top));padding-bottom:max(34px,env(safe-area-inset-bottom));background:#fff;border:1px solid #e2eae1;border-radius:24px;box-shadow:0 16px 45px #193a2a12;text-align:center}
+    .logo{display:inline-grid;place-items:center;width:72px;height:72px;border-radius:22px;background:var(--green);color:#fff;font-size:33px;font-weight:900;letter-spacing:-.09em}
+    h1{font-size:30px;letter-spacing:-.045em;margin:15px 0 4px}
+    p{margin:12px 0;color:var(--muted)}
+    #status{min-height:48px}
+    .actions{display:grid;gap:11px;margin:22px 0}
+    a,button{display:block;width:100%;border:0;border-radius:14px;padding:14px 16px;font:inherit;font-weight:750;text-decoration:none;cursor:pointer}
+    .primary{background:var(--green);color:#fff}
+    .secondary{background:#eaf5ed;color:var(--green)}
+    .quiet{font-size:13px}
+    button:disabled{opacity:.6;cursor:default}
+    :focus-visible{outline:3px solid #e4bd65;outline-offset:3px}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="logo" aria-hidden="true">ee.</div>
+    <h1>Easy English</h1>
+    <p>Inglés real. A tu ritmo.</p>
+    <p id="status" role="status" aria-live="polite">Conectando con la web actualizada…</p>
+    <div class="actions">
+      <button class="primary" type="button" id="retry">Reintentar conexión</button>
+      <a class="secondary" href="index.html">Entrar al curso sin conexión</a>
+    </div>
+    <p class="quiet">La web ofrece los artículos, exámenes, comunidad y perfil más recientes. El curso incluido en la APK se puede consultar sin internet.</p>
+  </main>
+  <script>
+    (() => {
+      'use strict';
+      const WEB_URL = 'https://jnfz92.github.io/index.html';
+      const status = document.getElementById('status');
+      const retry = document.getElementById('retry');
+      let pending = false;
+
+      async function openWeb() {
+        if (pending) return;
+        if (navigator.onLine === false) {
+          status.textContent = 'No hay conexión. Puedes abrir el curso sin internet o reintentar.';
+          retry.disabled = false;
+          return;
+        }
+        pending = true;
+        retry.disabled = true;
+        status.textContent = 'Conectando con la web actualizada…';
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 8000);
+        try {
+          // no-cors: GitHub Pages no necesita exponer una API CORS para comprobar la conexión.
+          // Evita cargar una página de error de WebView si el teléfono está sin internet.
+          await fetch(WEB_URL, { mode: 'no-cors', cache: 'no-store', signal: controller.signal });
+          window.location.replace(WEB_URL);
+        } catch (error) {
+          status.textContent = 'No se ha podido abrir la web. Puedes estudiar sin conexión o reintentar.';
+          retry.disabled = false;
+        } finally {
+          clearTimeout(timeout);
+          pending = false;
+        }
+      }
+
+      retry.addEventListener('click', openWeb);
+      window.addEventListener('online', openWeb);
+      document.addEventListener('DOMContentLoaded', openWeb, { once: true });
+    })();
+  </script>
+</body>
+</html>

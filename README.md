@@ -8,6 +8,7 @@ La aplicación sigue siendo Cordova para Android y conserva el identificador `co
 
 - **Con internet:** la pantalla de inicio `www/start.html` comprueba que GitHub Pages responde y abre `https://jnfz92.github.io/index.html` **dentro de la aplicación**. Toda la navegación del dominio sigue siendo la web real, con su CSS, JS y datos de Supabase. Los enlaces a otras webs se derivan al navegador externo.
 - **Sin internet al iniciar:** la aplicación ofrece abrir `www/index.html`, el curso original incluido dentro de la APK, que funciona sin conexión. El usuario puede volver a intentar conectar.
+- **Seguimiento del aprendizaje:** con internet, el perfil web y el examen de errores reúnen lecturas, notas, intentos de actividades y errores de ambos motores. La pantalla de conexión y el curso incluido en la APK ofrecen acceso directo a ese progreso online.
 - **Cuentas:** el inicio de sesión, los exámenes guardados y el perfil en modo web usan las mismas cuentas y datos de Supabase que el sitio. **No** se transfieren automáticamente las sesiones ni el progreso almacenado localmente por la versión anterior: son orígenes distintos. Es posible que debas iniciar sesión de nuevo.
 - **Requisitos:** la experiencia web y las consultas a Supabase necesitan acceso a internet. El contenido del curso local sigue disponible sin conexión al abrir la aplicación; no es una copia offline de toda la web.
 - **Descargas de PDF y enlaces externos:** dependen de la compatibilidad de Android WebView o del navegador externo; comprobarlos en un móvil real.

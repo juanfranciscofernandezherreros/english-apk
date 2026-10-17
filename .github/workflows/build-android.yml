@@ -3,6 +3,8 @@ name: Build EnglishAPK
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -53,6 +55,7 @@ jobs:
           if-no-files-found: error
 
       - name: Publish downloadable APK in GitHub Releases
+        if: github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

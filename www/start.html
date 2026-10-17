@@ -10,7 +10,7 @@
     *{box-sizing:border-box}
     body{margin:0;min-height:100vh;background:var(--bg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);display:grid;place-items:center}
     main{width:min(100% - 32px,430px);padding:34px 24px;padding-top:max(34px,env(safe-area-inset-top));padding-bottom:max(34px,env(safe-area-inset-bottom));background:#fff;border:1px solid #e2eae1;border-radius:24px;box-shadow:0 16px 45px #193a2a12;text-align:center}
-    .logo{display:inline-grid;place-items:center;width:72px;height:72px;border-radius:22px;background:var(--green);color:#fff;font-size:33px;font-weight:900;letter-spacing:-.09em}
+    .logo{display:block;width:72px;height:72px;margin:0 auto;border-radius:19px}
     h1{font-size:30px;letter-spacing:-.045em;margin:15px 0 4px}
     p{margin:12px 0;color:var(--muted)}
     #status{min-height:48px}
@@ -25,7 +25,7 @@
 </head>
 <body>
   <main>
-    <div class="logo" aria-hidden="true">ee.</div>
+    <img class="logo" src="img/logo.svg" width="72" height="72" alt="Logotipo de Easy English: e.e">
     <h1>Easy English</h1>
     <p>Inglés real. A tu ritmo.</p>
     <p id="status" role="status" aria-live="polite">Conectando con la web actualizada…</p>

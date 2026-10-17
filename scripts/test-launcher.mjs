@@ -16,6 +16,17 @@ assert.match(html, /https:\/\/jnfz92\.github\.io\/perfil\.html/);
 assert.match(offline, /Ver mi progreso y repasar errores en línea/);
 assert.match(xml, /version="1\.1\.1"/);
 assert.match(offline, /account-auth\.js/);
+assert.match(xml, /version="1\.1\.2"/);
+assert.match(offline, /aria-label="Menú inferior"/);
+for (const [id,icon,name] of [
+ ['navHome','⌂','Inicio'],['navLibrary','▤','Artículos'],
+ ['navCourse','▧','Curso'],['navExams','✎','Exámenes'],['navProfile','♙','Perfil']
+]) {
+ assert.ok(offline.includes('id="'+id+'"'), 'Missing offline nav '+name);
+ assert.ok(offline.includes('<span>'+icon+'</span>'+name), 'Wrong offline nav item '+name);
+}
+assert.match(offline, /id==='pdfView'\?'navCourse'/);
+
 
 const match = html.match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(match, 'Missing launcher inline JavaScript');

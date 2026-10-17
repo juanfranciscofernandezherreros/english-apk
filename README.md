@@ -1,110 +1,37 @@
-# Easy English · Educational Android App
+# Easy English para Android
 
-A custom offline English-learning app for Android focused on **theory + examples + guided practice**.
+La APK de **Easy English** muestra la misma web publicada en https://jnfz92.github.io/ cuando el teléfono tiene conexión. Así, la interfaz, los artículos, el curso por niveles, los exámenes, el perfil y la comunidad se actualizan **desde la web sin tener que volver a compilar la APK**.
 
-## Educational approach
+La aplicación sigue siendo Cordova para Android y conserva el identificador `com.easyenglish.grammarbook`, de forma que se puede instalar como actualización de la app anterior.
 
-The app is no longer designed as a 10,000-question grammar exam. It is structured as a small course:
+## ¿Qué cambia?
 
-1. Read a clear explanation in Spanish.
-2. Study bilingual examples.
-3. Review structures, time markers and common mistakes.
-4. Practise the exact topic.
-5. Read an explanation after every answer.
-6. Use **Tense Trainer** for mixed verb-tense practice.
+- **Con internet:** la pantalla de inicio `www/start.html` comprueba que GitHub Pages responde y abre `https://jnfz92.github.io/index.html` **dentro de la aplicación**. Toda la navegación del dominio sigue siendo la web real, con su CSS, JS y datos de Supabase. Los enlaces a otras webs se derivan al navegador externo.
+- **Sin internet al iniciar:** la aplicación ofrece abrir `www/index.html`, el curso original incluido dentro de la APK, que funciona sin conexión. El usuario puede volver a intentar conectar.
+- **Cuentas:** el inicio de sesión, los exámenes guardados y el perfil en modo web usan las mismas cuentas y datos de Supabase que el sitio. **No** se transfieren automáticamente las sesiones ni el progreso almacenado localmente por la versión anterior: son orígenes distintos. Es posible que debas iniciar sesión de nuevo.
+- **Requisitos:** la experiencia web y las consultas a Supabase necesitan acceso a internet. El contenido del curso local sigue disponible sin conexión al abrir la aplicación; no es una copia offline de toda la web.
+- **Descargas de PDF y enlaces externos:** dependen de la compatibilidad de Android WebView o del navegador externo; comprobarlos en un móvil real.
 
-## Main course: verb tenses
+## Código
 
-- Verb tense overview
-- Present Simple
-- Present Continuous
-- Present Perfect
-- Present Perfect Continuous
-- Present tense comparisons
-- Past Simple
-- Past Continuous
-- Past Perfect
-- Past Perfect Continuous
-- Future with will
-- Going to
-- Present Continuous for future arrangements
-- Present Simple for timetables
-- Future Continuous
-- Future Perfect
-- Present Perfect vs Past Simple
-- Never vs yet
-- Stative verbs
-- Mixed-tense trainer
+- `config.xml`: inicio por `start.html` y navegación limitada a `https://jnfz92.github.io/*`.
+- `www/start.html`: arranque web y ruta alternativa sin conexión.
+- `www/index.html`, `www/account-auth.js` y datos locales: contenido y funcionalidad del curso antiguo para acceder sin internet.
+- `scripts/test-launcher.mjs`: tests del arranque, URL y ruta offline.
+- `.github/workflows/build-android.yml`: construcción automática y publicación de la APK de prueba.
 
-## Additional learning areas
+**La fuente de verdad del contenido y diseño web es** https://github.com/jnfz92/jnfz92.github.io. No es necesario duplicarla en este repositorio.
 
-### Grammar
-- Essential modal verbs
-- Conditionals
+## Probar y compilar
 
-### Vocabulary
-- Useful phrasal verbs
-- Environment and pollution
+Se requiere Node.js, Java 17, Android SDK y las herramientas Android de Cordova.
 
-### Speaking
-- Giving opinions
-- Polite disagreement
-- Useful discourse markers
-
-The structure is intentionally content-driven so additional Easy English blog lessons can be added without rebuilding the learning model.
-
-## Practice design
-
-Questions are handcrafted around the lesson content rather than generated only from a large phrase bank. Current exercise styles include:
-
-- choose the correct tense;
-- complete a sentence;
-- distinguish similar tenses;
-- identify common mistakes;
-- vocabulary in context;
-- meaning and usage questions;
-- immediate answer explanations.
-
-## Offline
-
-All lesson and practice content used by the app is bundled inside the APK and works offline.
-
-## Source material
-
-Educational material is adapted from the Easy English blog:
-
-https://jnfz92.github.io/
-
-Important source articles include the guides to present, past and future tenses, Present Perfect vs Past Simple, never vs yet, future plans and stative verbs.
-
-## Build
-
-```bash
+```sh
 npm install
+npm run test:launcher
 npm run build:android
 ```
 
-The Android APK is generated at:
+APK generada en `dist/EnglishAPK.apk`. El flujo de GitHub Actions también publica la APK en el release `apk-latest` cuando los cambios llegan a `main`.
 
-```
-platforms/android/app/build/outputs/apk/debug/EnglishAPK.apk
-```
-
-The build script also copies the distributable APK to:
-
-```
-dist/EnglishAPK.apk
-```
-
-GitHub Actions builds the Android package on pushes to `main`.
-
-## Main files
-
-- `www/index.html` — educational course UI, lesson content and practice engine.
-- `www/img/logo.svg` — app logo.
-- `config.xml` — Cordova Android configuration.
-- `.github/workflows/build-android.yml` — Android build workflow.
-
-## Legacy question bank
-
-The older JSON question bank remains in the repository for now, but the redesigned app does **not** load it at runtime. It can be removed later after the educational course version has been validated on-device.
+**Validación pendiente antes de publicar:** instalar en Android y probar navegación interna y botón atrás, login/logout, Supabase, exámenes, enlaces y descarga de PDF. Estas pruebas no se pueden sustituir con comprobaciones de código.

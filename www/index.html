@@ -153,7 +153,7 @@ body.onboarding .welcome-hero h1{color:#193a2a}
     <p class="muted">Aprende a tu ritmo con lecciones cortas, práctica guiada y todo el contenido disponible sin conexión.</p>
     <div class="home-hero-actions">
       <button id="continueLearning" class="home-main-btn">▶ Continuar aprendiendo</button>
-      <button id="browseLibrary" class="home-outline-btn">Explorar 46 artículos ↗</button>
+      <button id="browseLibrary" class="home-outline-btn">Explorar artículos ↗</button>
     </div>
   </div>
   <div class="home-progress"><strong id="homeGreeting">Tu aprendizaje</strong><p id="homeProgressText">Avanza a tu ritmo.</p><div class="progress-meter"><span id="homeProgressBar" style="width:0%"></span></div></div>
@@ -169,7 +169,7 @@ body.onboarding .welcome-hero h1{color:#193a2a}
   <h2 class="quick-grid-title">Más formas de aprender</h2>
   <div class="grid">
     <button class="course-card" id="openExams"><div class="meta">PRÁCTICA OFFLINE</div><strong>📝 Exámenes por niveles</strong><span>Prueba lo que sabes y guarda tus resultados.</span></button>
-    <button class="course-card" id="openLibrary"><div class="meta">BIBLIOTECA OFFLINE</div><strong>📚 Todos los artículos</strong><span>Lee y repasa las 46 entradas del blog.</span></button>
+    <button class="course-card" id="openLibrary"><div class="meta">BIBLIOTECA OFFLINE</div><strong>📚 Todos los artículos</strong><span>Lee y repasa las lecciones incluidas en esta edición.</span></button>
     <button class="course-card" id="openProfile"><div class="meta">MI ESPACIO</div><strong>👤 Perfil y progreso</strong><span>Tus logros, lecturas y ejercicios completados.</span></button>
     <button class="course-card featured" data-open="tenses"><div class="meta" style="color:#dfece7">CURSO PRINCIPAL</div><strong>🧩 Tiempos verbales</strong><span>Presente, pasado, futuro y comparaciones.</span></button>
     <button class="course-card" data-open="grammar"><div class="meta">GRAMÁTICA</div><strong>✍ Gramática esencial</strong><span>Modales, condicionales y otras estructuras.</span></button>
@@ -184,6 +184,7 @@ body.onboarding .welcome-hero h1{color:#193a2a}
 <button class="back" id="libraryBackHome">← Inicio</button>
 <div class="card"><div class="meta">Biblioteca Easy English · Offline</div><h1>Todos los artículos del blog</h1><p class="muted">Busca, lee y marca lo estudiado. El progreso se guarda en este dispositivo.</p>
 <div class="library-toolbar"><input id="librarySearch" type="search" placeholder="Buscar artículos..." aria-label="Buscar artículos"><select id="libraryCategory" aria-label="Categoría"><option value="all">Todas</option><option value="grammar">Gramática</option><option value="vocabulary">Vocabulario</option><option value="speaking">Speaking</option><option value="listening">Listening</option><option value="lesson">Lecciones</option></select></div>
+<p class="online-study-link"><a href="https://jnfz92.github.io/articulos.html">🌐 Ver los artículos más recientes en la web →</a><small>Cuando tengas conexión puedes consultar al instante todo lo nuevo publicado en Supabase.</small></p>
 <div id="libraryCount" class="muted"></div><div id="libraryList" class="lesson-list"></div></div>
 </section>
 <section id="articleView" class="hidden"><button class="back" id="articleBackLibrary">← Biblioteca</button><article class="card"><div class="meta" id="articleMeta"></div><h1 id="articleTitle"></h1><div id="articleBody" class="article-body"></div><div class="actions"><button class="primary" id="markArticle">Marcar como leído ✓</button><button class="secondary" id="articleToLibrary">Ver más artículos</button></div></article></section>
@@ -229,6 +230,7 @@ body.onboarding .welcome-hero h1{color:#193a2a}
 <script src="blog-data-3.js"></script>
 <script src="blog-data-4.js"></script>
 <script src="blog-data-5.js"></script>
+<script src="blog-data-6.js"></script>
 <script>
 const lessons={
 tenses:[

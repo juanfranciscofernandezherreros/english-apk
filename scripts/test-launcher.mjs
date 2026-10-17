@@ -14,8 +14,15 @@ assert.match(html, /href="index\.html"/);
 assert.match(html, /id="onlineProgress"/);
 assert.match(html, /https:\/\/jnfz92\.github\.io\/perfil\.html/);
 assert.match(offline, /Ver mi progreso y repasar errores en línea/);
-assert.match(xml, /version="1\.1\.1"/);
+assert.match(xml, /version="1\.1\.2"/);
 assert.match(offline, /account-auth\.js/);
+assert.match(offline, /blog-data-6\.js/);
+const latestWriting = readFileSync('www/blog-data-6.js', 'utf8');
+const blogContext = { window: {} };
+vm.runInNewContext(latestWriting, blogContext);
+assert.equal(blogContext.window.EASY_ENGLISH_BLOG.length, 1);
+assert.match(blogContext.window.EASY_ENGLISH_BLOG[0].title, /tiempos verbales.*carta.*email/i);
+assert.match(blogContext.window.EASY_ENGLISH_BLOG[0].html, /I've been looking forward/);
 
 const match = html.match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(match, 'Missing launcher inline JavaScript');

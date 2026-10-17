@@ -138,6 +138,11 @@ body.onboarding .welcome-hero h1{color:#193a2a}
 @media(min-width:700px){.app{max-width:980px;padding-left:28px;padding-right:28px}.grid{gap:16px}.hero,.card{padding:28px}.course-card{padding:22px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
+/* La misma barra inferior de cinco accesos que la web de Easy English. */
+.bottom-nav{min-height:70px;gap:4px;padding:8px max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:rgba(255,255,255,.98);border-top:1px solid #dce8df;box-shadow:0 -6px 26px #1f29331b}
+.bottom-nav button{max-width:170px;min-width:0;flex:1 1 0;padding:5px 2px;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:0;border-radius:13px;margin:0;background:transparent;color:#536d60;font:800 12px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif}
+.bottom-nav button.active{background:#e2f1e8;color:#17644e}
+.bottom-nav button span{font:850 21px/23px system-ui,sans-serif}
 </style>
 </head>
 <body>
@@ -222,7 +227,7 @@ body.onboarding .welcome-hero h1{color:#193a2a}
 </section>
 
 <div class="footer">Contenido educativo offline · Basado en Easy English</div>
-<nav class="bottom-nav" aria-label="Navegación principal">
+<nav class="bottom-nav" aria-label="Menú inferior">
 <button id="navHome" class="active"><span>⌂</span>Inicio</button>
 <button id="navLibrary"><span>▤</span>Artículos</button>
 <button id="navCourse"><span>▧</span>Curso</button>
@@ -355,7 +360,7 @@ let currentCategory='tenses',currentLesson=null,quiz=[],qi=0,score=0,locked=fals
 const $=id=>document.getElementById(id);
 function show(id){
 ['welcome','home','catalog','lessonView','library','articleView','profileView','examsView','pdfView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));
-const nav=id==='welcome'?'navProfile':id==='home'?'navHome':id==='library'||id==='articleView'?'navLibrary':id==='profileView'?'navProfile':id==='examsView'?'navExams':id==='pdfView'?'navHome':'navCourse';
+const nav=id==='welcome'?'navProfile':id==='home'?'navHome':id==='library'||id==='articleView'?'navLibrary':id==='profileView'?'navProfile':id==='examsView'?'navExams':id==='pdfView'?'navCourse':'navCourse';
 ['navHome','navLibrary','navCourse','navExams','navProfile'].forEach(x=>{$(x).classList.toggle('active',x===nav);$(x).setAttribute('aria-current',x===nav?'page':'false')});
 if(id==='home'&&typeof renderHomeProgress==='function')renderHomeProgress();
 }

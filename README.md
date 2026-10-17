@@ -4,6 +4,10 @@ La APK de **Easy English** muestra la misma web publicada en https://jnfz92.gith
 
 La aplicación sigue siendo Cordova para Android y conserva el identificador `com.easyenglish.grammarbook`, de forma que se puede instalar como actualización de la app anterior.
 
+## Navegación compartida (v1.1.2)
+
+La barra inferior utiliza los mismos **cinco accesos y orden** en el modo web y en el curso Android sin conexión: **Inicio · Artículos · Curso · Exámenes · Perfil**. Los colores, medidas e iconos están alineados. En el sitio web también aparece en todas las páginas a tamaño móvil, incluido el lector de artículos; el pie de página está unificado en escritorio. La sección de PDF del curso sin conexión se agrupa bajo «Curso».
+
 ## ¿Qué cambia?
 
 - **Con internet:** la pantalla de inicio `www/start.html` comprueba que GitHub Pages responde y abre `https://jnfz92.github.io/index.html` **dentro de la aplicación**. Toda la navegación del dominio sigue siendo la web real, con su CSS, JS y datos de Supabase. Los enlaces a otras webs se derivan al navegador externo.

@@ -11,6 +11,10 @@ assert.match(xml, /<allow-navigation href="https:\/\/jnfz92\.github\.io\/\*" \/>
 assert.doesNotMatch(xml, /<allow-navigation href="\*" \/>/);
 assert.match(html, /https:\/\/jnfz92\.github\.io\/index\.html/);
 assert.match(html, /href="index\.html"/);
+assert.match(html, /id="onlineProgress"/);
+assert.match(html, /https:\/\/jnfz92\.github\.io\/perfil\.html/);
+assert.match(offline, /Ver mi progreso y repasar errores en línea/);
+assert.match(xml, /version="1\.1\.1"/);
 assert.match(offline, /account-auth\.js/);
 
 const match = html.match(/<script>([\s\S]*?)<\/script>/);

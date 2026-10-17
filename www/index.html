@@ -21,6 +21,7 @@ table{width:100%;border-collapse:collapse;margin:12px 0;background:#fff}th,td{bo
 .tabs{display:flex;gap:8px;overflow:auto;padding-bottom:4px}.tab{white-space:nowrap;border:1px solid var(--line);background:#fff;padding:10px 13px;border-radius:999px;font-weight:850;color:var(--green)}.tab.active{background:var(--green);color:#fff}
 .footer{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}
 @media(max-width:640px){.grid{grid-template-columns:1fr}h1{font-size:30px}}
+.suggestion-form label{display:block;margin:16px 0 6px;font-weight:750}.suggestion-form input,.suggestion-form textarea{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:11px;font:inherit;color:var(--ink);background:#fff}.suggestion-form textarea{min-height:120px;resize:vertical}.suggestion-status{min-height:1.5em;color:var(--green)}.suggestion-status[data-error=true]{color:var(--red)}.suggestion-items{display:grid;gap:12px}.suggestion-item{border:1px solid var(--line);border-radius:15px;padding:16px}.suggestion-item h2{font-size:21px;margin:0 0 8px}.suggestion-item p{white-space:pre-wrap;margin:0 0 14px}.suggestion-votes{display:flex;gap:8px;flex-wrap:wrap}.suggestion-votes button{border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);padding:9px 12px;font-weight:750;min-height:42px}.suggestion-votes button[aria-pressed=true]{background:var(--soft);border-color:var(--green);color:var(--green)}.suggestion-votes button:disabled{opacity:.65}
 
 /* Biblioteca y perfil */
 .library-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.library-toolbar input,.library-toolbar select,.profile-input{padding:13px;border-radius:12px;border:1px solid var(--line);background:white;font:inherit;min-width:0}.library-toolbar input{flex:1;min-width:160px}.library-toolbar select{max-width:150px}.library-article{background:white;border:1px solid var(--line);border-radius:15px;text-align:left;padding:15px;display:flex;gap:10px;justify-content:space-between;align-items:center}.library-article strong{display:block}.library-article small{color:var(--muted)}.library-article.completed{border-color:var(--ok);background:#eff8f2}.article-body{overflow-wrap:anywhere;line-height:1.75}.article-body img{max-width:100%;height:auto}.article-body .scroll{overflow:auto}.article-body table{font-size:14px}.article-body pre{overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#eaf3ec;padding:15px;border-radius:14px;text-align:center}.stat strong{display:block;color:var(--green);font-size:26px}.progress-meter{height:12px;overflow:hidden;border-radius:20px;background:#e1e6e2}.progress-meter>span{height:100%;display:block;background:var(--ok);transition:width .2s}.profile-input{width:100%;margin:8px 0}.profile-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}@media(max-width:400px){.stats{grid-template-columns:1fr 1fr}}
@@ -169,6 +170,7 @@ body.onboarding .welcome-hero h1{color:#193a2a}
   <h2 class="quick-grid-title">Más formas de aprender</h2>
   <div class="grid">
     <button class="course-card" id="openExams"><div class="meta">PRÁCTICA OFFLINE</div><strong>📝 Exámenes por niveles</strong><span>Prueba lo que sabes y guarda tus resultados.</span></button>
+    <button class="course-card" id="openSuggestions"><div class="meta">TU OPINIÓN CUENTA</div><strong>💡 Sugerencias</strong><span>Propón mejoras y vota por las ideas publicadas. No necesitas cuenta.</span></button>
     <button class="course-card" id="openLibrary"><div class="meta">BIBLIOTECA OFFLINE</div><strong>📚 Todos los artículos</strong><span>Lee y repasa las 46 entradas del blog.</span></button>
     <button class="course-card" id="openProfile"><div class="meta">MI ESPACIO</div><strong>👤 Perfil y progreso</strong><span>Tus logros, lecturas y ejercicios completados.</span></button>
     <button class="course-card featured" data-open="tenses"><div class="meta" style="color:#dfece7">CURSO PRINCIPAL</div><strong>🧩 Tiempos verbales</strong><span>Presente, pasado, futuro y comparaciones.</span></button>
@@ -180,6 +182,7 @@ body.onboarding .welcome-hero h1{color:#193a2a}
 
 
 <section id="examsView" class="hidden"><button class="back" id="examsBack">← Inicio</button><div class="card"><div class="meta">Practica sin conexión</div><h1>📝 Exámenes de inglés</h1><p class="muted">Elige un examen, responde las preguntas y recibe una explicación de cada respuesta. Tus resultados se guardan en el perfil.</p><div class="lesson-list" id="examList"><button class="lesson-btn" data-exam="basic"><strong>🌱 Nivel inicial · A1–A2</strong><small>10 preguntas · fundamentos de inglés</small></button><button class="lesson-btn" data-exam="intermediate"><strong>🎯 Nivel intermedio · B1</strong><small>12 preguntas · gramática y vocabulario</small></button><button class="lesson-btn" data-exam="advanced"><strong>🏆 Reto B1–B2</strong><small>14 preguntas · repaso mixto</small></button></div></div></section>
+<section id="suggestionsView" class="hidden"><button class="back" id="suggestionsBack">← Inicio</button><div class="card"><div class="meta">Ideas para mejorar Easy English</div><h1>💡 Sugerencias</h1><p class="muted">Envía una idea sin iniciar sesión. Se revisará antes de publicarse. Puedes votar una vez por navegador y cambiar tu voto.</p><form id="suggestionForm" class="suggestion-form"><label for="suggestionTitle">Título</label><input id="suggestionTitle" name="titulo" type="text" minlength="5" maxlength="100" required><label for="suggestionDescription">Cuéntanos más</label><textarea id="suggestionDescription" name="descripcion" minlength="10" maxlength="1000" required></textarea><div class="actions"><button class="primary" id="suggestionSubmit" type="submit">Enviar sugerencia</button></div><p id="suggestionFormStatus" class="suggestion-status" role="status" aria-live="polite"></p></form></div><div class="card"><h2>Sugerencias publicadas</h2><p class="muted">Ordenadas por cantidad de “Me gusta”.</p><p id="suggestionListStatus" class="suggestion-status" role="status" aria-live="polite">Cargando sugerencias…</p><div id="suggestionList" class="suggestion-items"></div></div></section>
 <section id="library" class="hidden">
 <button class="back" id="libraryBackHome">← Inicio</button>
 <div class="card"><div class="meta">Biblioteca Easy English · Offline</div><h1>Todos los artículos del blog</h1><p class="muted">Busca, lee y marca lo estudiado. El progreso se guarda en este dispositivo.</p>
@@ -347,8 +350,8 @@ speaking:['Speaking','Expresiones y estrategias para hablar con más naturalidad
 let currentCategory='tenses',currentLesson=null,quiz=[],qi=0,score=0,locked=false;
 const $=id=>document.getElementById(id);
 function show(id){
-['welcome','home','catalog','lessonView','library','articleView','profileView','examsView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));
-const nav=id==='welcome'?'navProfile':id==='home'?'navHome':id==='library'||id==='articleView'?'navLibrary':id==='profileView'?'navProfile':id==='examsView'?'navExams':'navCourse';
+['welcome','home','catalog','lessonView','library','articleView','profileView','examsView','suggestionsView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));
+const nav=id==='suggestionsView'?null:id==='welcome'?'navProfile':id==='home'?'navHome':id==='library'||id==='articleView'?'navLibrary':id==='profileView'?'navProfile':id==='examsView'?'navExams':'navCourse';
 ['navHome','navLibrary','navCourse','navExams','navProfile'].forEach(x=>{$(x).classList.toggle('active',x===nav);$(x).setAttribute('aria-current',x===nav?'page':'false')});
 if(id==='home'&&typeof renderHomeProgress==='function')renderHomeProgress();
 }
@@ -464,4 +467,5 @@ if(!student.name||!student.name.trim()||student.signedOut){showWelcome()}else{sh
 renderHomeProgress();
 </script>
 <script src="account-auth.js"></script>
+<script src="suggestions.js"></script>
 </body></html>
